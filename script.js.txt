@@ -1,0 +1,3387 @@
+/***********************************************************
+ * 1) 単語データ
+ *   - memorized: 暗記済み or そうでないか
+ *   - example: { sentence, pinyin, translation }
+ ***********************************************************/
+const words = [
+  {
+    id: 1,
+    chinese: "朋友",
+    pinyin: "péng yǒu",
+    partOfSpeech: "名詞",
+    meaning: "友達",
+    example: {
+      sentence: "你的朋友会为了你和诅咒战斗吗？",
+      pinyin: "Nǐ de péngyǒu huì wèile nǐ hé zǔzhòu zhàndòu ma?",
+      translation: "君の友達は君のために呪いと戦うかな？"
+    },
+    memorized: false
+  },
+  {
+    id: 2,
+    chinese: "学校",
+    pinyin: "xué xiào",
+    partOfSpeech: "名詞",
+    meaning: "学校",
+    example: {
+      sentence: "这是一所教学生对抗咒灵的学校。",
+      pinyin: "Zhè shì yì suǒ jiāo xuéshēng duìkàng zhòulíng de xuéxiào.",
+      translation: "これは学生に呪霊と戦う方法を教える学校だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 3,
+    chinese: "吃饭",
+    pinyin: "chī fàn",
+    partOfSpeech: "動詞",
+    meaning: "ご飯を食べる",
+    example: {
+      sentence: "在对抗巨人之前，先吃饭吧！",
+      pinyin: "Zài duìkàng jùrén zhīqián, xiān chīfàn ba!",
+      translation: "巨人と戦う前にまずご飯を食べよう！"
+    },
+    memorized: false
+  },
+  {
+    id: 4,
+    chinese: "老师",
+    pinyin: "lǎo shī",
+    partOfSpeech: "名詞",
+    meaning: "先生",
+    example: {
+      sentence: "五条老师总是喜欢开玩笑。",
+      pinyin: "Wǔtiáo lǎoshī zǒngshì xǐhuan kāiwánxiào.",
+      translation: "五条先生はいつも冗談を言うのが好きだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 5,
+    chinese: "今天",
+    pinyin: "jīn tiān",
+    partOfSpeech: "名詞",
+    meaning: "今日",
+    example: {
+      sentence: "今天会不会有新的任务？",
+      pinyin: "Jīntiān huì bù huì yǒu xīn de rènwù?",
+      translation: "今日は新しい任務があるかな？"
+    },
+    memorized: false
+  },
+  {
+    id: 6,
+    chinese: "明天",
+    pinyin: "míng tiān",
+    partOfSpeech: "名詞",
+    meaning: "明日",
+    example: {
+      sentence: "明天也许是决定命运的一天。",
+      pinyin: "Míngtiān yěxǔ shì juédìng mìngyùn de yìtiān.",
+      translation: "明日は運命を決める日かもしれない。"
+    },
+    memorized: false
+  },
+  {
+    id: 7,
+    chinese: "危险",
+    pinyin: "wēi xiǎn",
+    partOfSpeech: "形容詞",
+    meaning: "危険",
+    example: {
+      sentence: "外面的世界非常危险。",
+      pinyin: "Wàimiàn de shìjiè fēicháng wēixiǎn.",
+      translation: "外の世界はとても危険だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 8,
+    chinese: "希望",
+    pinyin: "xī wàng",
+    partOfSpeech: "名詞/動詞",
+    meaning: "希望 / 望む",
+    example: {
+      sentence: "我们一定能看到希望的光芒。",
+      pinyin: "Wǒmen yídìng néng kàndào xīwàng de guāngmáng.",
+      translation: "私たちは必ず希望の光を見ることができる。"
+    },
+    memorized: false
+  },
+  {
+    id: 9,
+    chinese: "努力",
+    pinyin: "nǔ lì",
+    partOfSpeech: "動詞",
+    meaning: "努力する",
+    example: {
+      sentence: "为了活下去，我们必须努力战斗。",
+      pinyin: "Wèile huó xiàqù, wǒmen bìxū nǔlì zhàndòu.",
+      translation: "生き残るために、私たちは努力して戦わなければならない。"
+    },
+    memorized: false
+  },
+  {
+    id: 10,
+    chinese: "家人",
+    pinyin: "jiā rén",
+    partOfSpeech: "名詞",
+    meaning: "家族",
+    example: {
+      sentence: "我的家人是我战斗的理由。",
+      pinyin: "Wǒ de jiārén shì wǒ zhàndòu de lǐyóu.",
+      translation: "家族が私の戦う理由だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 11,
+    chinese: "战斗",
+    pinyin: "zhàn dòu",
+    partOfSpeech: "動詞",
+    meaning: "戦う",
+    example: {
+      sentence: "战斗不仅仅是为了自己，也是为了大家。",
+      pinyin: "Zhàndòu bùjǐnjǐn shì wèile zìjǐ, yě shì wèile dàjiā.",
+      translation: "戦うのは自分のためだけでなく、みんなのためでもある。"
+    },
+    memorized: false
+  },
+  {
+    id: 12,
+    chinese: "眼镜",
+    pinyin: "yǎn jìng",
+    partOfSpeech: "名詞",
+    meaning: "眼鏡",
+    example: {
+      sentence: "没有眼镜，我什么都看不清，就像被咒灵包围了一样。",
+      pinyin: "Méiyǒu yǎnjìng, wǒ shénme dōu kànbùqīng, jiù xiàng bèi zhòulíng bāowéi le yíyàng.",
+      translation: "眼鏡がないと何も見えない。まるで呪霊に囲まれているみたいだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 13,
+    chinese: "力量",
+    pinyin: "lì liàng",
+    partOfSpeech: "名詞",
+    meaning: "力",
+    example: {
+      sentence: "只有团结的力量才能打败巨人。",
+      pinyin: "Zhǐyǒu tuánjié de lìliàng cáinéng dǎbài jùrén.",
+      translation: "団結の力だけが巨人を倒せる。"
+    },
+    memorized: false
+  },
+  {
+    id: 14,
+    chinese: "天气",
+    pinyin: "tiān qì",
+    partOfSpeech: "名詞",
+    meaning: "天気",
+    example: {
+      sentence: "天气好像预示着今天的任务会很困难。",
+      pinyin: "Tiānqì hǎoxiàng yùshìzhe jīntiān de rènwù huì hěn kùnnán.",
+      translation: "天気が今日の任務の難しさを暗示しているみたいだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 15,
+    chinese: "房间",
+    pinyin: "fáng jiān",
+    partOfSpeech: "名詞",
+    meaning: "部屋",
+    example: {
+      sentence: "每次回到房间，总觉得还有咒灵藏在角落。",
+      pinyin: "Měicì huídào fángjiān, zǒng juéde háiyǒu zhòulíng cáng zài jiǎoluò.",
+      translation: "部屋に戻るたびに、まだ呪霊が隅に隠れている気がする。"
+    },
+    memorized: false
+  },
+  {
+    id: 16,
+    chinese: "学习",
+    pinyin: "xué xí",
+    partOfSpeech: "動詞",
+    meaning: "勉強する",
+    example: {
+      sentence: "学习咒术是为了保护更多的人。",
+      pinyin: "Xuéxí zhòushù shì wèile bǎohù gèngduō de rén.",
+      translation: "呪術を学ぶのは、もっと多くの人を守るためだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 17,
+    chinese: "保护",
+    pinyin: "bǎo hù",
+    partOfSpeech: "動詞",
+    meaning: "守る",
+    example: {
+      sentence: "保护大家是我们的使命。",
+      pinyin: "Bǎohù dàjiā shì wǒmen de shǐmìng.",
+      translation: "みんなを守ることが私たちの使命だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 18,
+    chinese: "时间",
+    pinyin: "shí jiān",
+    partOfSpeech: "名詞",
+    meaning: "時間",
+    example: {
+      sentence: "时间不多了，我们必须马上行动！",
+      pinyin: "Shíjiān bùduō le, wǒmen bìxū mǎshàng xíngdòng!",
+      translation: "時間がない、すぐに行動しなきゃ！"
+    },
+    memorized: false
+  },
+  {
+    id: 19,
+    chinese: "休息",
+    pinyin: "xiū xi",
+    partOfSpeech: "動詞",
+    meaning: "休む",
+    example: {
+      sentence: "即使在战斗中，休息也是很重要的。",
+      pinyin: "Jíshǐ zài zhàndòu zhōng, xiūxi yěshì hěn zhòngyào de.",
+      translation: "戦いの中でも、休むことは大切だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 20,
+    chinese: "问题",
+    pinyin: "wèn tí",
+    partOfSpeech: "名詞",
+    meaning: "問題",
+    example: {
+      sentence: "这个任务有很多问题需要解决。",
+      pinyin: "Zhège rènwù yǒu hěnduō wèntí xūyào jiějué.",
+      translation: "この任務には解決すべき問題がたくさんある。"
+    },
+    memorized: false
+  },
+  {
+    id: 21,
+    chinese: "心情",
+    pinyin: "xīn qíng",
+    partOfSpeech: "名詞",
+    meaning: "気持ち",
+    example: {
+      sentence: "每次面对巨人，我的心情都很复杂。",
+      pinyin: "Měicì miànduì jùrén, wǒ de xīnqíng dōu hěn fùzá.",
+      translation: "巨人に直面するたび、気持ちはとても複雑だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 22,
+    chinese: "未来",
+    pinyin: "wèi lái",
+    partOfSpeech: "名詞",
+    meaning: "未来",
+    example: {
+      sentence: "为了未来，我们必须打破这座墙。",
+      pinyin: "Wèile wèilái, wǒmen bìxū dǎpò zhè zuò qiáng.",
+      translation: "未来のために、この壁を破らなければならない。"
+    },
+    memorized: false
+  },
+  {
+    id: 23,
+    chinese: "门",
+    pinyin: "mén",
+    partOfSpeech: "名詞",
+    meaning: "扉、ドア",
+    example: {
+      sentence: "打开这扇门，就能看到外面的世界。",
+      pinyin: "Dǎkāi zhè shàn mén, jiù néng kàndào wàimiàn de shìjiè.",
+      translation: "この扉を開ければ、外の世界が見える。"
+    },
+    memorized: false
+  },
+  {
+    id: 24,
+    chinese: "敌人",
+    pinyin: "dí rén",
+    partOfSpeech: "名詞",
+    meaning: "敵",
+    example: {
+      sentence: "敌人可能就藏在我们中间。",
+      pinyin: "Dírén kěnéng jiù cáng zài wǒmen zhōngjiān.",
+      translation: "敵は私たちの中に潜んでいるかもしれない。"
+    },
+    memorized: false
+  },
+  {
+    id: 25,
+    chinese: "信任",
+    pinyin: "xìn rèn",
+    partOfSpeech: "動詞/名詞",
+    meaning: "信じる / 信頼",
+    example: {
+      sentence: "信任是团队最重要的力量。",
+      pinyin: "Xìnrèn shì tuánduì zuì zhòngyào de lìliàng.",
+      translation: "信頼はチームにとって最も重要な力だ。"
+    },
+    memorized: false
+  },
+    {
+    id: 26,
+    chinese: "危险",
+    pinyin: "wēi xiǎn",
+    partOfSpeech: "形容詞",
+    meaning: "危険",
+    example: {
+      sentence: "战场上到处都是危险。",
+      pinyin: "Zhànchǎng shàng dàochù dōu shì wēixiǎn.",
+      translation: "戦場はどこも危険だらけだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 27,
+    chinese: "解决",
+    pinyin: "jiě jué",
+    partOfSpeech: "動詞",
+    meaning: "解決する",
+    example: {
+      sentence: "我们必须尽快解决这个问题。",
+      pinyin: "Wǒmen bìxū jǐnkuài jiějué zhège wèntí.",
+      translation: "この問題を早く解決しなければならない。"
+    },
+    memorized: false
+  },
+  {
+    id: 28,
+    chinese: "安全",
+    pinyin: "ān quán",
+    partOfSpeech: "形容詞",
+    meaning: "安全",
+    example: {
+      sentence: "这里并不安全，赶紧离开吧！",
+      pinyin: "Zhèlǐ bìng bù ānquán, gǎnjǐn líkāi ba!",
+      translation: "ここは安全じゃない。早く離れよう！"
+    },
+    memorized: false
+  },
+  {
+    id: 29,
+    chinese: "团队",
+    pinyin: "tuán duì",
+    partOfSpeech: "名詞",
+    meaning: "チーム",
+    example: {
+      sentence: "一个好的团队需要每个人的努力。",
+      pinyin: "Yí gè hǎo de tuánduì xūyào měi gèrén de nǔlì.",
+      translation: "良いチームには全員の努力が必要だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 30,
+    chinese: "勇气",
+    pinyin: "yǒng qì",
+    partOfSpeech: "名詞",
+    meaning: "勇気",
+    example: {
+      sentence: "只有拥有勇气的人才能面对巨大的挑战。",
+      pinyin: "Zhǐyǒu yōngyǒu yǒngqì de rén cáinéng miànduì jùdà de tiǎozhàn.",
+      translation: "勇気を持つ者だけが大きな挑戦に立ち向かえる。"
+    },
+    memorized: false
+  },
+  {
+    id: 31,
+    chinese: "未来",
+    pinyin: "wèi lái",
+    partOfSpeech: "名詞",
+    meaning: "未来",
+    example: {
+      sentence: "为了未来，我们需要改变现在。",
+      pinyin: "Wèile wèilái, wǒmen xūyào gǎibiàn xiànzài.",
+      translation: "未来のために、私たちは今を変えなければならない。"
+    },
+    memorized: false
+  },
+  {
+    id: 32,
+    chinese: "机会",
+    pinyin: "jī huì",
+    partOfSpeech: "名詞",
+    meaning: "機会",
+    example: {
+      sentence: "每次任务都是一次成长的机会。",
+      pinyin: "Měicì rènwù dōu shì yícì chéngzhǎng de jīhuì.",
+      translation: "任務は成長の機会でもある。"
+    },
+    memorized: false
+  },
+  {
+    id: 33,
+    chinese: "希望",
+    pinyin: "xī wàng",
+    partOfSpeech: "名詞/動詞",
+    meaning: "希望 / 望む",
+    example: {
+      sentence: "无论多难，我们都不能放弃希望。",
+      pinyin: "Wúlùn duō nán, wǒmen dōu bùnéng fàngqì xīwàng.",
+      translation: "どんなに困難でも希望を捨ててはいけない。"
+    },
+    memorized: false
+  },
+  {
+    id: 34,
+    chinese: "秘密",
+    pinyin: "mì mì",
+    partOfSpeech: "名詞",
+    meaning: "秘密",
+    example: {
+      sentence: "墙外的世界隐藏着巨大的秘密。",
+      pinyin: "Qiángwài de shìjiè yǐncángzhe jùdà de mìmì.",
+      translation: "壁の外の世界には大きな秘密が隠されている。"
+    },
+    memorized: false
+  },
+  {
+    id: 35,
+    chinese: "目标",
+    pinyin: "mù biāo",
+    partOfSpeech: "名詞",
+    meaning: "目標",
+    example: {
+      sentence: "完成任务是我们的最终目标。",
+      pinyin: "Wánchéng rènwù shì wǒmen de zuìzhōng mùbiāo.",
+      translation: "任務を達成することが私たちの最終目標だ。"
+    },
+    memorized: false
+  },
+    {
+    id: 36,
+    chinese: "自由",
+    pinyin: "zì yóu",
+    partOfSpeech: "名詞",
+    meaning: "自由",
+    example: {
+      sentence: "追求自由是我们战斗的意义。",
+      pinyin: "Zhuīqiú zìyóu shì wǒmen zhàndòu de yìyì.",
+      translation: "自由を追い求めることが私たちの戦いの意味だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 37,
+    chinese: "力量",
+    pinyin: "lì liàng",
+    partOfSpeech: "名詞",
+    meaning: "力",
+    example: {
+      sentence: "团队的力量让我们战无不胜。",
+      pinyin: "Tuánduì de lìliàng ràng wǒmen zhànwúbùshèng.",
+      translation: "チームの力が私たちを無敵にする。"
+    },
+    memorized: false
+  },
+  {
+    id: 38,
+    chinese: "感情",
+    pinyin: "gǎn qíng",
+    partOfSpeech: "名詞",
+    meaning: "感情",
+    example: {
+      sentence: "在战斗中，有时候感情会成为弱点。",
+      pinyin: "Zài zhàndòu zhōng, yǒushíhou gǎnqíng huì chéngwéi ruòdiǎn.",
+      translation: "戦いの中で感情が弱点になることもある。"
+    },
+    memorized: false
+  },
+  {
+    id: 39,
+    chinese: "生活",
+    pinyin: "shēng huó",
+    partOfSpeech: "名詞",
+    meaning: "生活",
+    example: {
+      sentence: "保护大家的生活是我的责任。",
+      pinyin: "Bǎohù dàjiā de shēnghuó shì wǒ de zérèn.",
+      translation: "みんなの生活を守るのが私の責任だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 40,
+    chinese: "任务",
+    pinyin: "rèn wù",
+    partOfSpeech: "名詞",
+    meaning: "任務",
+    example: {
+      sentence: "这次任务非常危险，请小心。",
+      pinyin: "Zhècì rènwù fēicháng wēixiǎn, qǐng xiǎoxīn.",
+      translation: "今回の任務は非常に危険なので、気をつけてください。"
+    },
+    memorized: false
+  },
+  {
+    id: 41,
+    chinese: "光明",
+    pinyin: "guāng míng",
+    partOfSpeech: "名詞",
+    meaning: "光明",
+    example: {
+      sentence: "穿过黑暗，我们才能看到光明。",
+      pinyin: "Chuānguò hēi'àn, wǒmen cáinéng kàndào guāngmíng.",
+      translation: "暗闇を抜けてこそ光明が見える。"
+    },
+    memorized: false
+  },
+  {
+    id: 42,
+    chinese: "天空",
+    pinyin: "tiān kōng",
+    partOfSpeech: "名詞",
+    meaning: "空",
+    example: {
+      sentence: "看着蓝色的天空，我感到一丝希望。",
+      pinyin: "Kànzhe lánsè de tiānkōng, wǒ gǎndào yì sī xīwàng.",
+      translation: "青い空を見て、一筋の希望を感じた。"
+    },
+    memorized: false
+  },
+  {
+    id: 43,
+    chinese: "朋友",
+    pinyin: "péng yǒu",
+    partOfSpeech: "名詞",
+    meaning: "友達",
+    example: {
+      sentence: "在危险面前，真正的朋友永远不会离开你。",
+      pinyin: "Zài wēixiǎn miànqián, zhēnzhèng de péngyǒu yǒngyuǎn bù huì líkāi nǐ.",
+      translation: "危険の前でも、本当の友達は絶対に離れない。"
+    },
+    memorized: false
+  },
+  {
+    id: 44,
+    chinese: "选择",
+    pinyin: "xuǎn zé",
+    partOfSpeech: "動詞",
+    meaning: "選ぶ",
+    example: {
+      sentence: "每一个选择都会影响未来。",
+      pinyin: "Měi yí gè xuǎnzé dōu huì yǐngxiǎng wèilái.",
+      translation: "どんな選択も未来に影響を与える。"
+    },
+    memorized: false
+  },
+  {
+    id: 45,
+    chinese: "时间",
+    pinyin: "shí jiān",
+    partOfSpeech: "名詞",
+    meaning: "時間",
+    example: {
+      sentence: "时间不等人，赶紧出发吧！",
+      pinyin: "Shíjiān bù děng rén, gǎnjǐn chūfā ba!",
+      translation: "時間は待ってくれない、急いで出発しよう！"
+    },
+    memorized: false
+  },
+  {
+    id: 46,
+    chinese: "感觉",
+    pinyin: "gǎn jué",
+    partOfSpeech: "名詞/動詞",
+    meaning: "感覚 / 感じる",
+    example: {
+      sentence: "我感觉这一切都不是真实的。",
+      pinyin: "Wǒ gǎnjué zhè yíqiè dōu bú shì zhēnshí de.",
+      translation: "全てが現実じゃない気がする。"
+    },
+    memorized: false
+  },
+  {
+    id: 47,
+    chinese: "敌人",
+    pinyin: "dí rén",
+    partOfSpeech: "名詞",
+    meaning: "敵",
+    example: {
+      sentence: "敌人越强大，我们越需要团结。",
+      pinyin: "Dírén yuè qiángdà, wǒmen yuè xūyào tuánjié.",
+      translation: "敵が強大であればあるほど、私たちは団結する必要がある。"
+    },
+    memorized: false
+  },
+  {
+    id: 48,
+    chinese: "成长",
+    pinyin: "chéng zhǎng",
+    partOfSpeech: "名詞/動詞",
+    meaning: "成長 / 成長する",
+    example: {
+      sentence: "每一次失败都是成长的机会。",
+      pinyin: "Měi yí cì shībài dōu shì chéngzhǎng de jīhuì.",
+      translation: "失敗は成長の機会だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 49,
+    chinese: "心",
+    pinyin: "xīn",
+    partOfSpeech: "名詞",
+    meaning: "心",
+    example: {
+      sentence: "只要心中有希望，就能创造奇迹。",
+      pinyin: "Zhǐyào xīnzhōng yǒu xīwàng, jiù néng chuàngzào qíjì.",
+      translation: "心に希望があれば奇跡を起こせる。"
+    },
+    memorized: false
+  },
+  {
+    id: 50,
+    chinese: "选择",
+    pinyin: "xuǎn zé",
+    partOfSpeech: "動詞",
+    meaning: "選ぶ",
+    example: {
+      sentence: "在生与死之间，我们只能选择战斗。",
+      pinyin: "Zài shēng yǔ sǐ zhījiān, wǒmen zhǐnéng xuǎnzé zhàndòu.",
+      translation: "生と死の間で、私たちは戦うことを選ぶしかない。"
+    },
+    memorized: false
+  },
+    {
+    id: 51,
+    chinese: "强大",
+    pinyin: "qiáng dà",
+    partOfSpeech: "形容詞",
+    meaning: "強大",
+    example: {
+      sentence: "只有强大的人才能活下去。",
+      pinyin: "Zhǐyǒu qiángdà de rén cáinéng huóxiàqù.",
+      translation: "強大な者だけが生き残れる。"
+    },
+    memorized: false
+  },
+  {
+    id: 52,
+    chinese: "害怕",
+    pinyin: "hài pà",
+    partOfSpeech: "動詞",
+    meaning: "怖がる",
+    example: {
+      sentence: "害怕只会让你失去更多。",
+      pinyin: "Hàipà zhǐ huì ràng nǐ shīqù gèng duō.",
+      translation: "恐れているだけではもっと多くを失う。"
+    },
+    memorized: false
+  },
+  {
+    id: 53,
+    chinese: "冷静",
+    pinyin: "lěng jìng",
+    partOfSpeech: "形容詞",
+    meaning: "冷静",
+    example: {
+      sentence: "面对巨人，保持冷静是最重要的。",
+      pinyin: "Miànduì jùrén, bǎochí lěngjìng shì zuì zhòngyào de.",
+      translation: "巨人に直面したとき、冷静でいることが最も大事だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 54,
+    chinese: "恐怖",
+    pinyin: "kǒng bù",
+    partOfSpeech: "名詞/形容詞",
+    meaning: "恐怖 / 恐ろしい",
+    example: {
+      sentence: "这个世界充满了恐怖，但我们不能放弃希望。",
+      pinyin: "Zhège shìjiè chōngmǎn le kǒngbù, dàn wǒmen bùnéng fàngqì xīwàng.",
+      translation: "この世界は恐怖に満ちているが、希望を捨ててはいけない。"
+    },
+    memorized: false
+  },
+  {
+    id: 55,
+    chinese: "重要",
+    pinyin: "zhòng yào",
+    partOfSpeech: "形容詞",
+    meaning: "重要",
+    example: {
+      sentence: "保护同伴是最重要的事情。",
+      pinyin: "Bǎohù tóngbàn shì zuì zhòngyào de shìqíng.",
+      translation: "仲間を守ることが一番重要だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 56,
+    chinese: "战胜",
+    pinyin: "zhàn shèng",
+    partOfSpeech: "動詞",
+    meaning: "打ち勝つ",
+    example: {
+      sentence: "只有战胜恐惧，我们才能变得更强。",
+      pinyin: "Zhǐyǒu zhànshèng kǒngjù, wǒmen cáinéng biànde gèng qiáng.",
+      translation: "恐怖に打ち勝ってこそ、私たちは強くなれる。"
+    },
+    memorized: false
+  },
+  {
+    id: 57,
+    chinese: "绝望",
+    pinyin: "jué wàng",
+    partOfSpeech: "名詞/動詞",
+    meaning: "絶望 / 絶望する",
+    example: {
+      sentence: "即使面对绝望，也不能放弃战斗。",
+      pinyin: "Jíshǐ miànduì juéwàng, yě bùnéng fàngqì zhàndòu.",
+      translation: "たとえ絶望に直面しても、戦うことを諦めてはいけない。"
+    },
+    memorized: false
+  },
+  {
+    id: 58,
+    chinese: "明白",
+    pinyin: "míng bái",
+    partOfSpeech: "動詞",
+    meaning: "理解する",
+    example: {
+      sentence: "只有经历战斗，才能明白生存的意义。",
+      pinyin: "Zhǐyǒu jīnglì zhàndòu, cáinéng míngbái shēngcún de yìyì.",
+      translation: "戦いを経験して初めて、生きる意味が分かる。"
+    },
+    memorized: false
+  },
+  {
+    id: 59,
+    chinese: "坚持",
+    pinyin: "jiān chí",
+    partOfSpeech: "動詞",
+    meaning: "やり抜く",
+    example: {
+      sentence: "坚持到最后的人，才是真正的胜利者。",
+      pinyin: "Jiānchí dào zuìhòu de rén, cái shì zhēnzhèng de shènglìzhě.",
+      translation: "最後までやり抜いた人が本当の勝者だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 60,
+    chinese: "失去",
+    pinyin: "shī qù",
+    partOfSpeech: "動詞",
+    meaning: "失う",
+    example: {
+      sentence: "失去重要的人是无法弥补的痛苦。",
+      pinyin: "Shīqù zhòngyào de rén shì wúfǎ míbǔ de tòngkǔ.",
+      translation: "大切な人を失うのは埋められない苦しみだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 61,
+    chinese: "恐惧",
+    pinyin: "kǒng jù",
+    partOfSpeech: "名詞",
+    meaning: "恐怖",
+    example: {
+      sentence: "恐惧是战斗中最大的敌人。",
+      pinyin: "Kǒngjù shì zhàndòu zhōng zuìdà de dírén.",
+      translation: "恐怖は戦いにおける最大の敵だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 62,
+    chinese: "保护",
+    pinyin: "bǎo hù",
+    partOfSpeech: "動詞",
+    meaning: "守る / 保護する",
+    example: {
+      sentence: "为了保护无辜的人，我愿意牺牲一切。",
+      pinyin: "Wèile bǎohù wúgū de rén, wǒ yuànyì xīshēng yíqiè.",
+      translation: "罪のない人々を守るためなら、すべてを犠牲にする覚悟だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 63,
+    chinese: "紧张",
+    pinyin: "jǐn zhāng",
+    partOfSpeech: "形容詞",
+    meaning: "緊張している",
+    example: {
+      sentence: "战斗开始前，总会感到紧张。",
+      pinyin: "Zhàndòu kāishǐ qián, zǒng huì gǎndào jǐnzhāng.",
+      translation: "戦いが始まる前は、いつも緊張する。"
+    },
+    memorized: false
+  },
+  {
+    id: 64,
+    chinese: "孤独",
+    pinyin: "gū dú",
+    partOfSpeech: "名詞/形容詞",
+    meaning: "孤独",
+    example: {
+      sentence: "即使在战友身边，有时候还是会感到孤独。",
+      pinyin: "Jíshǐ zài zhànyǒu shēnbiān, yǒushíhou háishì huì gǎndào gūdú.",
+      translation: "仲間のそばにいても、孤独を感じることがある。"
+    },
+    memorized: false
+  },
+  {
+    id: 65,
+    chinese: "希望",
+    pinyin: "xī wàng",
+    partOfSpeech: "名詞/動詞",
+    meaning: "希望 / 望む",
+    example: {
+      sentence: "只要心中有希望，我们就能创造奇迹。",
+      pinyin: "Zhǐyào xīnzhōng yǒu xīwàng, wǒmen jiù néng chuàngzào qíjì.",
+      translation: "心に希望がある限り、私たちは奇跡を起こせる。"
+    },
+    memorized: false
+  },
+    {
+    id: 66,
+    chinese: "非常",
+    pinyin: "fēi cháng",
+    partOfSpeech: "副詞",
+    meaning: "非常に / とても",
+    example: {
+      sentence: "面对敌人时，保持冷静非常重要。",
+      pinyin: "Miànduì dírén shí, bǎochí lěngjìng fēicháng zhòngyào.",
+      translation: "敵に直面するとき、冷静さを保つことが非常に重要だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 67,
+    chinese: "逐渐",
+    pinyin: "zhú jiàn",
+    partOfSpeech: "副詞",
+    meaning: "徐々に / 少しずつ",
+    example: {
+      sentence: "他逐渐习惯了战场的生活。",
+      pinyin: "Tā zhújiàn xíguàn le zhànchǎng de shēnghuó.",
+      translation: "彼は徐々に戦場の生活に慣れていった。"
+    },
+    memorized: false
+  },
+  {
+    id: 68,
+    chinese: "果然",
+    pinyin: "guǒ rán",
+    partOfSpeech: "副詞",
+    meaning: "やはり / 案の定",
+    example: {
+      sentence: "果然，巨人再次出现了。",
+      pinyin: "Guǒrán, jùrén zàicì chūxiàn le.",
+      translation: "やはり、巨人が再び現れた。"
+    },
+    memorized: false
+  },
+  {
+    id: 69,
+    chinese: "迅速",
+    pinyin: "xùn sù",
+    partOfSpeech: "副詞",
+    meaning: "迅速に / 素早く",
+    example: {
+      sentence: "敌人来了，我们必须迅速行动！",
+      pinyin: "Dírén lái le, wǒmen bìxū xùnsù xíngdòng!",
+      translation: "敵が来た、迅速に行動しなければ！"
+    },
+    memorized: false
+  },
+  {
+    id: 70,
+    chinese: "完全",
+    pinyin: "wán quán",
+    partOfSpeech: "副詞",
+    meaning: "完全に / 全く",
+    example: {
+      sentence: "他已经完全掌握了咒术的力量。",
+      pinyin: "Tā yǐjīng wánquán zhǎngwò le zhòushù de lìliàng.",
+      translation: "彼はすでに呪術の力を完全に掌握した。"
+    },
+    memorized: false
+  },
+  {
+    id: 71,
+    chinese: "绝对",
+    pinyin: "jué duì",
+    partOfSpeech: "副詞",
+    meaning: "絶対に",
+    example: {
+      sentence: "我绝对不会放弃对抗巨人的希望。",
+      pinyin: "Wǒ juéduì bù huì fàngqì duìkàng jùrén de xīwàng.",
+      translation: "私は巨人に対抗する希望を絶対に諦めない。"
+    },
+    memorized: false
+  },
+  {
+    id: 72,
+    chinese: "轻易",
+    pinyin: "qīng yì",
+    partOfSpeech: "副詞",
+    meaning: "簡単に / 安易に",
+    example: {
+      sentence: "不要轻易相信敌人的话。",
+      pinyin: "Bùyào qīngyì xiāngxìn dírén de huà.",
+      translation: "敵の言葉を簡単に信じてはいけない。"
+    },
+    memorized: false
+  },
+  {
+    id: 73,
+    chinese: "从未",
+    pinyin: "cóng wèi",
+    partOfSpeech: "副詞",
+    meaning: "これまで一度も〜ない",
+    example: {
+      sentence: "他从未见过如此可怕的诅咒。",
+      pinyin: "Tā cóngwèi jiànguò rúcǐ kěpà de zǔzhòu.",
+      translation: "彼はこれまで一度もこんな恐ろしい呪いを見たことがない。"
+    },
+    memorized: false
+  },
+  {
+    id: 74,
+    chinese: "突然",
+    pinyin: "tū rán",
+    partOfSpeech: "副詞",
+    meaning: "突然",
+    example: {
+      sentence: "巨人突然从墙后出现了。",
+      pinyin: "Jùrén tūrán cóng qiáng hòu chūxiàn le.",
+      translation: "巨人が突然壁の後ろから現れた。"
+    },
+    memorized: false
+  },
+  {
+    id: 75,
+    chinese: "尽快",
+    pinyin: "jǐn kuài",
+    partOfSpeech: "副詞",
+    meaning: "できるだけ早く",
+    example: {
+      sentence: "我们必须尽快找到解决方法。",
+      pinyin: "Wǒmen bìxū jǐnkuài zhǎodào jiějué fāngfǎ.",
+      translation: "私たちはできるだけ早く解決方法を見つけなければならない。"
+    },
+    memorized: false
+  },
+  {
+    id: 76,
+    chinese: "明显",
+    pinyin: "míng xiǎn",
+    partOfSpeech: "副詞",
+    meaning: "明らかに",
+    example: {
+      sentence: "咒术的力量明显强于普通武器。",
+      pinyin: "Zhòushù de lìliàng míngxiǎn qiáng yú pǔtōng wǔqì.",
+      translation: "呪術の力は明らかに通常の武器より強い。"
+    },
+    memorized: false
+  },
+  {
+    id: 77,
+    chinese: "勉强",
+    pinyin: "miǎn qiǎng",
+    partOfSpeech: "副詞",
+    meaning: "無理に / どうにか",
+    example: {
+      sentence: "他勉强躲过了敌人的攻击。",
+      pinyin: "Tā miǎnqiǎng duǒguò le dírén de gōngjí.",
+      translation: "彼はどうにか敵の攻撃を避けた。"
+    },
+    memorized: false
+  },
+  {
+    id: 78,
+    chinese: "始终",
+    pinyin: "shǐ zhōng",
+    partOfSpeech: "副詞",
+    meaning: "最初から最後まで / 一貫して",
+    example: {
+      sentence: "他始终没有放弃保护同伴的信念。",
+      pinyin: "Tā shǐzhōng méiyǒu fàngqì bǎohù tóngbàn de xìnniàn.",
+      translation: "彼は最初から最後まで仲間を守る信念を諦めなかった。"
+    },
+    memorized: false
+  },
+  {
+    id: 79,
+    chinese: "差点",
+    pinyin: "chà diǎn",
+    partOfSpeech: "副詞",
+    meaning: "危うく / もう少しで",
+    example: {
+      sentence: "他差点被巨人抓住。",
+      pinyin: "Tā chàdiǎn bèi jùrén zhuāzhù.",
+      translation: "彼は危うく巨人に捕まるところだった。"
+    },
+    memorized: false
+  },
+  {
+    id: 80,
+    chinese: "根本",
+    pinyin: "gēn běn",
+    partOfSpeech: "副詞",
+    meaning: "全く / そもそも",
+    example: {
+      sentence: "普通人根本无法对抗这种咒灵。",
+      pinyin: "Pǔtōng rén gēnběn wúfǎ duìkàng zhèzhǒng zhòulíng.",
+      translation: "普通の人はそもそもこんな呪霊に対抗できない。"
+    },
+    memorized: false
+  },
+    {
+    id: 81,
+    chinese: "偶尔",
+    pinyin: "ǒu ěr",
+    partOfSpeech: "副詞",
+    meaning: "たまに / 時々",
+    example: {
+      sentence: "即使是五条老师也会偶尔犯错。",
+      pinyin: "Jíshǐ shì Wǔtiáo lǎoshī yě huì ǒu'ěr fàncuò.",
+      translation: "五条先生でもたまにはミスをする。"
+    },
+    memorized: false
+  },
+  {
+    id: 82,
+    chinese: "一起",
+    pinyin: "yì qǐ",
+    partOfSpeech: "副詞",
+    meaning: "一緒に",
+    example: {
+      sentence: "我们一起打败巨人吧！",
+      pinyin: "Wǒmen yìqǐ dǎbài jùrén ba!",
+      translation: "一緒に巨人を倒そう！"
+    },
+    memorized: false
+  },
+  {
+    id: 83,
+    chinese: "终于",
+    pinyin: "zhōng yú",
+    partOfSpeech: "副詞",
+    meaning: "ついに / やっと",
+    example: {
+      sentence: "我们终于看到了胜利的曙光。",
+      pinyin: "Wǒmen zhōngyú kàndào le shènglì de shǔguāng.",
+      translation: "私たちはついに勝利の夜明けを見た。"
+    },
+    memorized: false
+  },
+  {
+    id: 84,
+    chinese: "仍然",
+    pinyin: "réng rán",
+    partOfSpeech: "副詞",
+    meaning: "依然として / まだ",
+    example: {
+      sentence: "即使失败了，他仍然没有放弃。",
+      pinyin: "Jíshǐ shībài le, tā réngrán méiyǒu fàngqì.",
+      translation: "たとえ失敗しても、彼はまだ諦めていない。"
+    },
+    memorized: false
+  },
+  {
+    id: 85,
+    chinese: "更加",
+    pinyin: "gèng jiā",
+    partOfSpeech: "副詞",
+    meaning: "さらに / もっと",
+    example: {
+      sentence: "为了同伴的安全，他变得更加勇敢。",
+      pinyin: "Wèile tóngbàn de ānquán, tā biàn de gèngjiā yǒnggǎn.",
+      translation: "仲間の安全のために、彼はさらに勇敢になった。"
+    },
+    memorized: false
+  },
+  {
+    id: 86,
+    chinese: "几乎",
+    pinyin: "jī hū",
+    partOfSpeech: "副詞",
+    meaning: "ほとんど / ほぼ",
+    example: {
+      sentence: "巨人几乎摧毁了整座城市。",
+      pinyin: "Jùrén jīhū cuīhuǐ le zhěngzuò chéngshì.",
+      translation: "巨人がほとんど町を壊してしまった。"
+    },
+    memorized: false
+  },
+  {
+    id: 87,
+    chinese: "完全",
+    pinyin: "wán quán",
+    partOfSpeech: "副詞",
+    meaning: "完全に / 全く",
+    example: {
+      sentence: "这场战斗他完全胜利了。",
+      pinyin: "Zhè chǎng zhàndòu tā wánquán shènglì le.",
+      translation: "この戦いで彼は完全勝利を収めた。"
+    },
+    memorized: false
+  },
+  {
+    id: 88,
+    chinese: "特别",
+    pinyin: "tè bié",
+    partOfSpeech: "副詞",
+    meaning: "特に / とりわけ",
+    example: {
+      sentence: "五条老师的能力特别强。",
+      pinyin: "Wǔtiáo lǎoshī de nénglì tèbié qiáng.",
+      translation: "五条先生の能力は特に強い。"
+    },
+    memorized: false
+  },
+  {
+    id: 89,
+    chinese: "甚至",
+    pinyin: "shèn zhì",
+    partOfSpeech: "副詞",
+    meaning: "さえも / さらに",
+    example: {
+      sentence: "他甚至愿意牺牲自己去保护别人。",
+      pinyin: "Tā shènzhì yuànyì xīshēng zìjǐ qù bǎohù biérén.",
+      translation: "彼は自分を犠牲にしてでも他人を守る覚悟がある。"
+    },
+    memorized: false
+  },
+  {
+    id: 90,
+    chinese: "永远",
+    pinyin: "yǒng yuǎn",
+    partOfSpeech: "副詞",
+    meaning: "永遠に",
+    example: {
+      sentence: "战士们誓言永远守护人类。",
+      pinyin: "Zhànshìmen shìyán yǒngyuǎn shǒuhù rénlèi.",
+      translation: "兵士たちは人類を永遠に守ると誓った。"
+    },
+    memorized: false
+  },
+  {
+    id: 91,
+    chinese: "差不多",
+    pinyin: "chà bù duō",
+    partOfSpeech: "副詞",
+    meaning: "ほぼ / 大体",
+    example: {
+      sentence: "敌人差不多已经被击败了。",
+      pinyin: "Dírén chàbùduō yǐjīng bèi jíbài le.",
+      translation: "敵はほぼ倒された。"
+    },
+    memorized: false
+  },
+  {
+    id: 92,
+    chinese: "直接",
+    pinyin: "zhí jiē",
+    partOfSpeech: "副詞",
+    meaning: "直接",
+    example: {
+      sentence: "他直接面对巨人，没有一丝恐惧。",
+      pinyin: "Tā zhíjiē miànduì jùrén, méiyǒu yì sī kǒngjù.",
+      translation: "彼は巨人に直接立ち向かい、一切の恐れを見せなかった。"
+    },
+    memorized: false
+  },
+  {
+    id: 93,
+    chinese: "原本",
+    pinyin: "yuán běn",
+    partOfSpeech: "副詞",
+    meaning: "元々 / 本来",
+    example: {
+      sentence: "原本以为任务会简单，结果却异常困难。",
+      pinyin: "Yuánběn yǐwéi rènwù huì jiǎndān, jiéguǒ què yìcháng kùnnán.",
+      translation: "元々任務は簡単だと思っていたが、結果は非常に困難だった。"
+    },
+    memorized: false
+  },
+  {
+    id: 94,
+    chinese: "意外",
+    pinyin: "yì wài",
+    partOfSpeech: "副詞",
+    meaning: "意外に / 思いがけず",
+    example: {
+      sentence: "他意外发现了咒灵的弱点。",
+      pinyin: "Tā yìwài fāxiàn le zhòulíng de ruòdiǎn.",
+      translation: "彼は思いがけず呪霊の弱点を見つけた。"
+    },
+    memorized: false
+  },
+  {
+    id: 95,
+    chinese: "轻松",
+    pinyin: "qīng sōng",
+    partOfSpeech: "副詞",
+    meaning: "簡単に / 気楽に",
+    example: {
+      sentence: "五条老师轻松解决了强大的敌人。",
+      pinyin: "Wǔtiáo lǎoshī qīngsōng jiějué le qiángdà de dírén.",
+      translation: "五条先生は強敵を簡単に片付けた。"
+    },
+    memorized: false
+  },
+    {
+    id: 96,
+    chinese: "愤怒",
+    pinyin: "fèn nù",
+    partOfSpeech: "形容詞",
+    meaning: "怒っている",
+    example: {
+      sentence: "看到同伴受伤，他感到极度愤怒。",
+      pinyin: "Kàndào tóngbàn shòushāng, tā gǎndào jídù fènnù.",
+      translation: "仲間が負傷するのを見て、彼は極度に怒りを覚えた。"
+    },
+    memorized: false
+  },
+  {
+    id: 97,
+    chinese: "悲伤",
+    pinyin: "bēi shāng",
+    partOfSpeech: "形容詞",
+    meaning: "悲しい",
+    example: {
+      sentence: "失去重要的朋友让他无比悲伤。",
+      pinyin: "Shīqù zhòngyào de péngyǒu ràng tā wúbǐ bēishāng.",
+      translation: "大切な友人を失ったことが彼をとても悲しませた。"
+    },
+    memorized: false
+  },
+  {
+    id: 98,
+    chinese: "绝望",
+    pinyin: "jué wàng",
+    partOfSpeech: "形容詞",
+    meaning: "絶望的な",
+    example: {
+      sentence: "面对巨人的力量，他感到前所未有的绝望。",
+      pinyin: "Miànduì jùrén de lìliàng, tā gǎndào qiánsuǒwèiyǒu de juéwàng.",
+      translation: "巨人の力に直面して、彼はかつてないほどの絶望を感じた。"
+    },
+    memorized: false
+  },
+  {
+    id: 99,
+    chinese: "冷酷",
+    pinyin: "lěng kù",
+    partOfSpeech: "形容詞",
+    meaning: "冷酷な",
+    example: {
+      sentence: "敌人用冷酷的微笑嘲笑他们。",
+      pinyin: "Dírén yòng lěngkù de wēixiào cháoxiào tāmen.",
+      translation: "敵は冷酷な笑みを浮かべて彼らを嘲笑した。"
+    },
+    memorized: false
+  },
+  {
+    id: 100,
+    chinese: "英俊",
+    pinyin: "yīng jùn",
+    partOfSpeech: "形容詞",
+    meaning: "ハンサムな",
+    example: {
+      sentence: "五条老师不仅强大，而且非常英俊。",
+      pinyin: "Wǔtiáo lǎoshī bùjǐn qiángdà, érqiě fēicháng yīngjùn.",
+      translation: "五条先生は強大なだけでなく、とてもハンサムだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 101,
+    chinese: "美丽",
+    pinyin: "měi lì",
+    partOfSpeech: "形容詞",
+    meaning: "美しい",
+    example: {
+      sentence: "她有一双美丽而坚定的眼睛。",
+      pinyin: "Tā yǒu yì shuāng měilì ér jiāndìng de yǎnjīng.",
+      translation: "彼女は美しくて意志の強い目をしている。"
+    },
+    memorized: false
+  },
+  {
+    id: 102,
+    chinese: "丑陋",
+    pinyin: "chǒu lòu",
+    partOfSpeech: "形容詞",
+    meaning: "醜い",
+    example: {
+      sentence: "巨人的面孔看起来非常丑陋。",
+      pinyin: "Jùrén de miànkǒng kànqǐlái fēicháng chǒulòu.",
+      translation: "巨人の顔は非常に醜く見える。"
+    },
+    memorized: false
+  },
+  {
+    id: 103,
+    chinese: "恐怖",
+    pinyin: "kǒng bù",
+    partOfSpeech: "形容詞",
+    meaning: "恐ろしい",
+    example: {
+      sentence: "夜晚的森林里藏着恐怖的咒灵。",
+      pinyin: "Yèwǎn de sēnlín lǐ cángzhe kǒngbù de zhòulíng.",
+      translation: "夜の森には恐ろしい呪霊が潜んでいる。"
+    },
+    memorized: false
+  },
+  {
+    id: 104,
+    chinese: "强壮",
+    pinyin: "qiáng zhuàng",
+    partOfSpeech: "形容詞",
+    meaning: "たくましい",
+    example: {
+      sentence: "他是一个身体非常强壮的战士。",
+      pinyin: "Tā shì yí gè shēntǐ fēicháng qiángzhuàng de zhànshì.",
+      translation: "彼は体が非常にたくましい兵士だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 105,
+    chinese: "柔弱",
+    pinyin: "róu ruò",
+    partOfSpeech: "形容詞",
+    meaning: "弱々しい / 柔らかい",
+    example: {
+      sentence: "她看起来很柔弱，但内心却非常坚强。",
+      pinyin: "Tā kànqǐlái hěn róuruò, dàn nèixīn què fēicháng jiānqiáng.",
+      translation: "彼女は見た目は弱々しいが、内面はとても強い。"
+    },
+    memorized: false
+  },
+  {
+    id: 106,
+    chinese: "高大",
+    pinyin: "gāo dà",
+    partOfSpeech: "形容詞",
+    meaning: "背が高い / 大きい",
+    example: {
+      sentence: "巨人高大得令人难以置信。",
+      pinyin: "Jùrén gāodà de lìng rén nányǐ zhìxìn.",
+      translation: "巨人は信じられないほど背が高い。"
+    },
+    memorized: false
+  },
+  {
+    id: 107,
+    chinese: "敏捷",
+    pinyin: "mǐn jié",
+    partOfSpeech: "形容詞",
+    meaning: "俊敏な",
+    example: {
+      sentence: "他的动作非常敏捷，巨人根本抓不到他。",
+      pinyin: "Tā de dòngzuò fēicháng mǐnjié, jùrén gēnběn zhuā bù dào tā.",
+      translation: "彼の動きは非常に俊敏で、巨人は全く彼を捕まえられない。"
+    },
+    memorized: false
+  },
+  {
+    id: 108,
+    chinese: "冷漠",
+    pinyin: "lěng mò",
+    partOfSpeech: "形容詞",
+    meaning: "冷淡な",
+    example: {
+      sentence: "他对别人的感受总是显得冷漠。",
+      pinyin: "Tā duì biérén de gǎnshòu zǒng shì xiǎnde lěngmò.",
+      translation: "彼は他人の感情に対していつも冷淡だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 109,
+    chinese: "开心",
+    pinyin: "kāi xīn",
+    partOfSpeech: "形容詞",
+    meaning: "嬉しい / 楽しい",
+    example: {
+      sentence: "战斗结束后，他们露出了开心的笑容。",
+      pinyin: "Zhàndòu jiéshù hòu, tāmen lùchū le kāixīn de xiàoróng.",
+      translation: "戦いが終わった後、彼らは嬉しそうに笑った。"
+    },
+    memorized: false
+  },
+   {
+    id: 110,
+    chinese: "为什么",
+    pinyin: "wèi shén me",
+    partOfSpeech: "疑問詞",
+    meaning: "なぜ / どうして",
+    example: {
+      sentence: "你为什么要独自面对咒灵？",
+      pinyin: "Nǐ wèishénme yào dúzì miànduì zhòulíng?",
+      translation: "君はなぜ一人で呪霊に立ち向かうんだ？"
+    },
+    memorized: false
+  },
+  {
+    id: 111,
+    chinese: "什么",
+    pinyin: "shén me",
+    partOfSpeech: "疑問詞",
+    meaning: "何",
+    example: {
+      sentence: "你到底想要什么？",
+      pinyin: "Nǐ dàodǐ xiǎngyào shénme?",
+      translation: "君は一体何が欲しいんだ？"
+    },
+    memorized: false
+  },
+  {
+    id: 112,
+    chinese: "谁",
+    pinyin: "shéi",
+    partOfSpeech: "疑問詞",
+    meaning: "誰",
+    example: {
+      sentence: "谁在背后操控这些巨人？",
+      pinyin: "Shéi zài bèihòu cāokòng zhèxiē jùrén?",
+      translation: "これらの巨人を操っているのは誰だ？"
+    },
+    memorized: false
+  },
+  {
+    id: 113,
+    chinese: "哪儿",
+    pinyin: "nǎ r",
+    partOfSpeech: "疑問詞",
+    meaning: "どこ",
+    example: {
+      sentence: "巨人是从哪儿来的？",
+      pinyin: "Jùrén shì cóng nǎr lái de?",
+      translation: "巨人はどこから来たんだ？"
+    },
+    memorized: false
+  },
+  {
+    id: 114,
+    chinese: "哪一个",
+    pinyin: "nǎ yí gè",
+    partOfSpeech: "疑問詞",
+    meaning: "どれ / どの",
+    example: {
+      sentence: "哪一个是你的目标？",
+      pinyin: "Nǎ yí gè shì nǐ de mùbiāo?",
+      translation: "どれが君の目標なんだ？"
+    },
+    memorized: false
+  },
+  {
+    id: 115,
+    chinese: "怎么",
+    pinyin: "zěn me",
+    partOfSpeech: "疑問詞",
+    meaning: "どうやって / どうして",
+    example: {
+      sentence: "你打算怎么打败咒灵？",
+      pinyin: "Nǐ dǎsuàn zěnme dǎbài zhòulíng?",
+      translation: "どうやって呪霊を倒すつもりだ？"
+    },
+    memorized: false
+  },
+  {
+    id: 116,
+    chinese: "怎么样",
+    pinyin: "zěn me yàng",
+    partOfSpeech: "疑問詞",
+    meaning: "どう / どんな",
+    example: {
+      sentence: "你的计划怎么样了？",
+      pinyin: "Nǐ de jìhuà zěnmeyàng le?",
+      translation: "君の計画はどうなった？"
+    },
+    memorized: false
+  },
+  {
+    id: 117,
+    chinese: "多少",
+    pinyin: "duō shǎo",
+    partOfSpeech: "疑問詞",
+    meaning: "どれくらい / いくつ",
+    example: {
+      sentence: "这座城市还有多少幸存者？",
+      pinyin: "Zhè zuò chéngshì hái yǒu duōshǎo xìngcúnzhě?",
+      translation: "この街にはあとどれくらい生存者がいる？"
+    },
+    memorized: false
+  },
+  {
+    id: 118,
+    chinese: "几",
+    pinyin: "jǐ",
+    partOfSpeech: "疑問詞",
+    meaning: "いくつ / 何個",
+    example: {
+      sentence: "你们队里有几个人？",
+      pinyin: "Nǐmen duì lǐ yǒu jǐ gè rén?",
+      translation: "君たちの隊には何人いる？"
+    },
+    memorized: false
+  },
+  {
+    id: 119,
+    chinese: "什么时候",
+    pinyin: "shén me shí hou",
+    partOfSpeech: "疑問詞",
+    meaning: "いつ",
+    example: {
+      sentence: "你们打算什么时候行动？",
+      pinyin: "Nǐmen dǎsuàn shénme shíhou xíngdòng?",
+      translation: "君たちはいつ行動を起こすつもりだ？"
+    },
+    memorized: false
+  },
+  {
+    id: 120,
+    chinese: "怎么回事",
+    pinyin: "zěn me huí shì",
+    partOfSpeech: "疑問詞",
+    meaning: "どういうこと",
+    example: {
+      sentence: "这到底是怎么回事？",
+      pinyin: "Zhè dàodǐ shì zěnme huíshì?",
+      translation: "一体これはどういうことなんだ？"
+    },
+    memorized: false
+  },
+  {
+    id: 121,
+    chinese: "为何",
+    pinyin: "wèi hé",
+    partOfSpeech: "疑問詞",
+    meaning: "なぜ",
+    example: {
+      sentence: "为何你会选择留在这里？",
+      pinyin: "Wèihé nǐ huì xuǎnzé liú zài zhèlǐ?",
+      translation: "君はなぜここに留まることを選んだんだ？"
+    },
+    memorized: false
+  },
+  {
+    id: 122,
+    chinese: "在哪儿",
+    pinyin: "zài nǎ r",
+    partOfSpeech: "疑問詞",
+    meaning: "どこに",
+    example: {
+      sentence: "我们的队长现在在哪儿？",
+      pinyin: "Wǒmen de duìzhǎng xiànzài zài nǎr?",
+      translation: "私たちの隊長は今どこにいる？"
+    },
+    memorized: false
+  },
+  {
+    id: 123,
+    chinese: "多少次",
+    pinyin: "duō shǎo cì",
+    partOfSpeech: "疑問詞",
+    meaning: "何回",
+    example: {
+      sentence: "你们已经失败了多少次？",
+      pinyin: "Nǐmen yǐjīng shībài le duōshǎo cì?",
+      translation: "君たちはすでに何回失敗した？"
+    },
+    memorized: false
+  },
+  {
+    id: 124,
+    chinese: "是否",
+    pinyin: "shì fǒu",
+    partOfSpeech: "疑問詞",
+    meaning: "〜かどうか",
+    example: {
+      sentence: "你是否相信他的计划？",
+      pinyin: "Nǐ shìfǒu xiāngxìn tā de jìhuà?",
+      translation: "君は彼の計画を信じるか？"
+    },
+    memorized: false
+  },
+    {
+    id: 125,
+    chinese: "天气",
+    pinyin: "tiān qì",
+    partOfSpeech: "名詞",
+    meaning: "天気",
+    example: {
+      sentence: "今天的天气很好，适合执行任务。",
+      pinyin: "Jīntiān de tiānqì hěn hǎo, shìhé zhíxíng rènwù.",
+      translation: "今日は天気が良くて、任務を遂行するのに適している。"
+    },
+    memorized: false
+  },
+  {
+    id: 126,
+    chinese: "晴天",
+    pinyin: "qíng tiān",
+    partOfSpeech: "名詞",
+    meaning: "晴れた日",
+    example: {
+      sentence: "晴天时可以清楚地观察到巨人的动向。",
+      pinyin: "Qíngtiān shí kěyǐ qīngchǔ de guānchá dào jùrén de dòngxiàng.",
+      translation: "晴れた日には巨人の動きをはっきり観察できる。"
+    },
+    memorized: false
+  },
+  {
+    id: 127,
+    chinese: "雨天",
+    pinyin: "yǔ tiān",
+    partOfSpeech: "名詞",
+    meaning: "雨の日",
+    example: {
+      sentence: "雨天让视线变得模糊，战斗更加困难。",
+      pinyin: "Yǔtiān ràng shìxiàn biàn de móhú, zhàndòu gèngjiā kùnnán.",
+      translation: "雨の日は視界がぼやけて、戦いがさらに困難になる。"
+    },
+    memorized: false
+  },
+  {
+    id: 128,
+    chinese: "风",
+    pinyin: "fēng",
+    partOfSpeech: "名詞",
+    meaning: "風",
+    example: {
+      sentence: "强风让巨人的移动更加危险。",
+      pinyin: "Qiángfēng ràng jùrén de yídòng gèngjiā wēixiǎn.",
+      translation: "強風が巨人の移動をさらに危険にする。"
+    },
+    memorized: false
+  },
+  {
+    id: 129,
+    chinese: "雪",
+    pinyin: "xuě",
+    partOfSpeech: "名詞",
+    meaning: "雪",
+    example: {
+      sentence: "下雪时，咒灵的气息会变得不容易被察觉。",
+      pinyin: "Xiàxuě shí, zhòulíng de qìxī huì biàn de bù róngyì bèi chájué.",
+      translation: "雪が降ると呪霊の気配を察知しづらくなる。"
+    },
+    memorized: false
+  },
+  {
+    id: 130,
+    chinese: "温度",
+    pinyin: "wēn dù",
+    partOfSpeech: "名詞",
+    meaning: "気温",
+    example: {
+      sentence: "极端的温度会影响咒术的效果。",
+      pinyin: "Jíduān de wēndù huì yǐngxiǎng zhòushù de xiàoguǒ.",
+      translation: "極端な気温は呪術の効果に影響を与える。"
+    },
+    memorized: false
+  },
+  {
+    id: 131,
+    chinese: "寒冷",
+    pinyin: "hán lěng",
+    partOfSpeech: "形容詞",
+    meaning: "寒い / 冷たい",
+    example: {
+      sentence: "寒冷的天气让战士们更加疲惫。",
+      pinyin: "Hánlěng de tiānqì ràng zhànshìmen gèngjiā píbèi.",
+      translation: "寒い天気が兵士たちをさらに疲れさせる。"
+    },
+    memorized: false
+  },
+  {
+    id: 132,
+    chinese: "炎热",
+    pinyin: "yán rè",
+    partOfSpeech: "形容詞",
+    meaning: "暑い / 蒸し暑い",
+    example: {
+      sentence: "炎热的夏天让巨人的体力消耗得更快。",
+      pinyin: "Yánrè de xiàtiān ràng jùrén de tǐlì xiāohào de gèng kuài.",
+      translation: "暑い夏は巨人の体力をより早く消耗させる。"
+    },
+    memorized: false
+  },
+  {
+    id: 133,
+    chinese: "春天",
+    pinyin: "chūn tiān",
+    partOfSpeech: "名詞",
+    meaning: "春",
+    example: {
+      sentence: "春天的草原上总是隐藏着危险。",
+      pinyin: "Chūntiān de cǎoyuán shàng zǒng shì yǐncángzhe wēixiǎn.",
+      translation: "春の草原にはいつも危険が潜んでいる。"
+    },
+    memorized: false
+  },
+  {
+    id: 134,
+    chinese: "夏天",
+    pinyin: "xià tiān",
+    partOfSpeech: "名詞",
+    meaning: "夏",
+    example: {
+      sentence: "夏天的夜晚是咒灵活动最频繁的时候。",
+      pinyin: "Xiàtiān de yèwǎn shì zhòulíng huódòng zuì pínfán de shíhòu.",
+      translation: "夏の夜は呪霊が最も活発に活動する時間だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 135,
+    chinese: "秋天",
+    pinyin: "qiū tiān",
+    partOfSpeech: "名詞",
+    meaning: "秋",
+    example: {
+      sentence: "秋天的凉风让人暂时忘记了战争的残酷。",
+      pinyin: "Qiūtiān de liángfēng ràng rén zhànshí wàngjì le zhànzhēng de cánkù.",
+      translation: "秋の涼しい風が人々に戦争の残酷さを一時忘れさせる。"
+    },
+    memorized: false
+  },
+  {
+    id: 136,
+    chinese: "冬天",
+    pinyin: "dōng tiān",
+    partOfSpeech: "名詞",
+    meaning: "冬",
+    example: {
+      sentence: "冬天的寒冷让战斗变得更加艰难。",
+      pinyin: "Dōngtiān de hánlěng ràng zhàndòu biàn de gèngjiā jiānnán.",
+      translation: "冬の寒さが戦いをさらに困難にする。"
+    },
+    memorized: false
+  },
+  {
+    id: 137,
+    chinese: "暴风雨",
+    pinyin: "bào fēng yǔ",
+    partOfSpeech: "名詞",
+    meaning: "嵐 / 暴風雨",
+    example: {
+      sentence: "暴风雨中隐藏着未知的威胁。",
+      pinyin: "Bàofēngyǔ zhōng yǐncángzhe wèizhī de wēixié.",
+      translation: "嵐の中に未知の脅威が潜んでいる。"
+    },
+    memorized: false
+  },
+  {
+    id: 138,
+    chinese: "阴天",
+    pinyin: "yīn tiān",
+    partOfSpeech: "名詞",
+    meaning: "曇りの日",
+    example: {
+      sentence: "阴天让人感到压抑，但对咒术师来说是绝佳的行动时机。",
+      pinyin: "Yīntiān ràng rén gǎndào yāyì, dàn duì zhòushùshī láishuō shì juéjiā de xíngdòng shíjī.",
+      translation: "曇りの日は憂鬱だが、呪術師にとっては絶好の行動の機会だ。"
+    },
+    memorized: false
+  },
+    {
+    id: 139,
+    chinese: "星期一",
+    pinyin: "xīng qī yī",
+    partOfSpeech: "名詞",
+    meaning: "月曜日",
+    example: {
+      sentence: "星期一总是充满了新的任务。",
+      pinyin: "Xīngqīyī zǒng shì chōngmǎn le xīn de rènwù.",
+      translation: "月曜日はいつも新しい任務でいっぱいだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 140,
+    chinese: "星期二",
+    pinyin: "xīng qī èr",
+    partOfSpeech: "名詞",
+    meaning: "火曜日",
+    example: {
+      sentence: "星期二是咒术训练的日子。",
+      pinyin: "Xīngqī'èr shì zhòushù xùnliàn de rìzi.",
+      translation: "火曜日は呪術訓練の日だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 141,
+    chinese: "星期三",
+    pinyin: "xīng qī sān",
+    partOfSpeech: "名詞",
+    meaning: "水曜日",
+    example: {
+      sentence: "星期三的早晨总是特别安静。",
+      pinyin: "Xīngqīsān de zǎochén zǒng shì tèbié ānjìng.",
+      translation: "水曜日の朝はいつも特に静かだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 142,
+    chinese: "星期四",
+    pinyin: "xīng qī sì",
+    partOfSpeech: "名詞",
+    meaning: "木曜日",
+    example: {
+      sentence: "星期四晚上通常会有巨人出没。",
+      pinyin: "Xīngqīsì wǎnshàng tōngcháng huì yǒu jùrén chūmò.",
+      translation: "木曜日の夜は巨人が現れることが多い。"
+    },
+    memorized: false
+  },
+  {
+    id: 143,
+    chinese: "星期五",
+    pinyin: "xīng qī wǔ",
+    partOfSpeech: "名詞",
+    meaning: "金曜日",
+    example: {
+      sentence: "星期五是作战计划讨论的日子。",
+      pinyin: "Xīngqīwǔ shì zuòzhàn jìhuà tǎolùn de rìzi.",
+      translation: "金曜日は作戦計画を議論する日だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 144,
+    chinese: "星期六",
+    pinyin: "xīng qī liù",
+    partOfSpeech: "名詞",
+    meaning: "土曜日",
+    example: {
+      sentence: "星期六适合开展大型任务。",
+      pinyin: "Xīngqīliù shìhé kāizhǎn dàxíng rènwù.",
+      translation: "土曜日は大規模な任務を遂行するのに適している。"
+    },
+    memorized: false
+  },
+  {
+    id: 145,
+    chinese: "星期天",
+    pinyin: "xīng qī tiān",
+    partOfSpeech: "名詞",
+    meaning: "日曜日",
+    example: {
+      sentence: "星期天是战士们短暂休息的日子。",
+      pinyin: "Xīngqītiān shì zhànshìmen duǎnzàn xiūxi de rìzi.",
+      translation: "日曜日は兵士たちが短い休息を取る日だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 146,
+    chinese: "上午",
+    pinyin: "shàng wǔ",
+    partOfSpeech: "名詞",
+    meaning: "午前",
+    example: {
+      sentence: "上午的训练任务非常繁重。",
+      pinyin: "Shàngwǔ de xùnliàn rènwù fēicháng fánzhòng.",
+      translation: "午前中の訓練任務は非常に大変だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 147,
+    chinese: "中午",
+    pinyin: "zhōng wǔ",
+    partOfSpeech: "名詞",
+    meaning: "昼 / 正午",
+    example: {
+      sentence: "中午是巨人最少出没的时间。",
+      pinyin: "Zhōngwǔ shì jùrén zuì shǎo chūmò de shíjiān.",
+      translation: "昼は巨人が最も少ない時間帯だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 148,
+    chinese: "下午",
+    pinyin: "xià wǔ",
+    partOfSpeech: "名詞",
+    meaning: "午後",
+    example: {
+      sentence: "下午是最适合观察敌人的时间。",
+      pinyin: "Xiàwǔ shì zuì shìhé guānchá dírén de shíjiān.",
+      translation: "午後は敵を観察するのに最も適した時間だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 149,
+    chinese: "晚上",
+    pinyin: "wǎn shàng",
+    partOfSpeech: "名詞",
+    meaning: "夜",
+    example: {
+      sentence: "晚上是咒灵最活跃的时间。",
+      pinyin: "Wǎnshàng shì zhòulíng zuì huóyuè de shíjiān.",
+      translation: "夜は呪霊が最も活発になる時間だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 150,
+    chinese: "凌晨",
+    pinyin: "líng chén",
+    partOfSpeech: "名詞",
+    meaning: "早朝 / 夜明け前",
+    example: {
+      sentence: "凌晨的空气中弥漫着一股不安的气息。",
+      pinyin: "Língchén de kōngqì zhōng mímànzhe yì gǔ bù'ān de qìxī.",
+      translation: "早朝の空気には不安な気配が漂っている。"
+    },
+    memorized: false
+  },
+  {
+    id: 151,
+    chinese: "清晨",
+    pinyin: "qīng chén",
+    partOfSpeech: "名詞",
+    meaning: "早朝",
+    example: {
+      sentence: "清晨的第一缕阳光照在城墙上。",
+      pinyin: "Qīngchén de dì yī lǚ yángguāng zhào zài chéngqiáng shàng.",
+      translation: "早朝の最初の陽光が城壁に差し込んだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 152,
+    chinese: "半夜",
+    pinyin: "bàn yè",
+    partOfSpeech: "名詞",
+    meaning: "真夜中",
+    example: {
+      sentence: "半夜的战斗最让人感到紧张。",
+      pinyin: "Bànyè de zhàndòu zuì ràng rén gǎndào jǐnzhāng.",
+      translation: "真夜中の戦いは最も緊張感が高まる。"
+    },
+    memorized: false
+  },
+  {
+    id: 153,
+    chinese: "时间",
+    pinyin: "shí jiān",
+    partOfSpeech: "名詞",
+    meaning: "時間",
+    example: {
+      sentence: "我们没有多少时间来完成任务。",
+      pinyin: "Wǒmen méiyǒu duōshǎo shíjiān lái wánchéng rènwù.",
+      translation: "私たちには任務を完了する時間がほとんどない。"
+    },
+    memorized: false
+  },
+    {
+    id: 154,
+    chinese: "早餐",
+    pinyin: "zǎo cān",
+    partOfSpeech: "名詞",
+    meaning: "朝食",
+    example: {
+      sentence: "在出发执行任务之前，记得吃一顿丰盛的早餐。",
+      pinyin: "Zài chūfā zhíxíng rènwù zhīqián, jìde chī yí dùn fēngshèng de zǎocān.",
+      translation: "任務に出発する前に、しっかり朝食を食べるのを忘れないで。"
+    },
+    memorized: false
+  },
+  {
+    id: 155,
+    chinese: "午餐",
+    pinyin: "wǔ cān",
+    partOfSpeech: "名詞",
+    meaning: "昼食",
+    example: {
+      sentence: "午餐时间很短，战士们必须快速进食。",
+      pinyin: "Wǔcān shíjiān hěn duǎn, zhànshìmen bìxū kuàisù jìnshí.",
+      translation: "昼食の時間は短いので、兵士たちは素早く食事をしなければならない。"
+    },
+    memorized: false
+  },
+  {
+    id: 156,
+    chinese: "晚餐",
+    pinyin: "wǎn cān",
+    partOfSpeech: "名詞",
+    meaning: "夕食",
+    example: {
+      sentence: "战斗结束后，一顿热乎乎的晚餐是最大的安慰。",
+      pinyin: "Zhàndòu jiéshù hòu, yí dùn rèhūhū de wǎncān shì zuìdà de ānwèi.",
+      translation: "戦いが終わった後、温かい夕食が最大の慰めだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 157,
+    chinese: "点心",
+    pinyin: "diǎn xīn",
+    partOfSpeech: "名詞",
+    meaning: "軽食 / おやつ",
+    example: {
+      sentence: "休息时吃点点心可以恢复体力。",
+      pinyin: "Xiūxi shí chī diǎn diǎnxīn kěyǐ huīfù tǐlì.",
+      translation: "休憩中に軽食をとることで体力が回復する。"
+    },
+    memorized: false
+  },
+  {
+    id: 158,
+    chinese: "饱",
+    pinyin: "bǎo",
+    partOfSpeech: "形容詞",
+    meaning: "お腹がいっぱい / 満腹",
+    example: {
+      sentence: "他吃得很饱，现在精力充沛。",
+      pinyin: "Tā chī de hěn bǎo, xiànzài jīnglì chōngpèi.",
+      translation: "彼はお腹いっぱい食べて、今は精力に満ちている。"
+    },
+    memorized: false
+  },
+  {
+    id: 159,
+    chinese: "饿",
+    pinyin: "è",
+    partOfSpeech: "形容詞",
+    meaning: "空腹 / お腹が空いた",
+    example: {
+      sentence: "一整天没吃东西，他感到非常饿。",
+      pinyin: "Yì zhěng tiān méi chī dōngxi, tā gǎndào fēicháng è.",
+      translation: "一日中何も食べていなくて、彼はとてもお腹が空いている。"
+    },
+    memorized: false
+  },
+  {
+    id: 160,
+    chinese: "吃饭",
+    pinyin: "chī fàn",
+    partOfSpeech: "動詞",
+    meaning: "ご飯を食べる",
+    example: {
+      sentence: "战斗前必须好好吃饭保持体力。",
+      pinyin: "Zhàndòu qián bìxū hǎohǎo chīfàn bǎochí tǐlì.",
+      translation: "戦いの前にはしっかりご飯を食べて体力を保つべきだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 161,
+    chinese: "喝水",
+    pinyin: "hē shuǐ",
+    partOfSpeech: "動詞",
+    meaning: "水を飲む",
+    example: {
+      sentence: "在沙漠环境中，保持喝水非常重要。",
+      pinyin: "Zài shāmò huánjìng zhōng, bǎochí hēshuǐ fēicháng zhòngyào.",
+      translation: "砂漠の環境では、水を飲むことが非常に重要だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 162,
+    chinese: "食物",
+    pinyin: "shí wù",
+    partOfSpeech: "名詞",
+    meaning: "食べ物",
+    example: {
+      sentence: "他们正在寻找足够的食物来度过冬天。",
+      pinyin: "Tāmen zhèngzài xúnzhǎo zúgòu de shíwù lái dùguò dōngtiān.",
+      translation: "彼らは冬を越すための十分な食べ物を探している。"
+    },
+    memorized: false
+  },
+  {
+    id: 163,
+    chinese: "味道",
+    pinyin: "wèi dào",
+    partOfSpeech: "名詞",
+    meaning: "味 / 味わい",
+    example: {
+      sentence: "新鲜的面包有一种特别的味道。",
+      pinyin: "Xīnxiān de miànbāo yǒu yì zhǒng tèbié de wèidào.",
+      translation: "新鮮なパンには特別な味がある。"
+    },
+    memorized: false
+  },
+  {
+    id: 164,
+    chinese: "饥饿",
+    pinyin: "jī è",
+    partOfSpeech: "名詞",
+    meaning: "飢え",
+    example: {
+      sentence: "巨人的饥饿感似乎永远无法满足。",
+      pinyin: "Jùrén de jī'è gǎn sìhū yǒngyuǎn wúfǎ mǎnzú.",
+      translation: "巨人の飢えは永遠に満たされないようだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 165,
+    chinese: "煮",
+    pinyin: "zhǔ",
+    partOfSpeech: "動詞",
+    meaning: "煮る / 茹でる",
+    example: {
+      sentence: "他们用简单的锅煮了一些汤。",
+      pinyin: "Tāmen yòng jiǎndān de guō zhǔ le yìxiē tāng.",
+      translation: "彼らは簡単な鍋でスープを煮た。"
+    },
+    memorized: false
+  },
+  {
+    id: 166,
+    chinese: "烤",
+    pinyin: "kǎo",
+    partOfSpeech: "動詞",
+    meaning: "焼く",
+    example: {
+      sentence: "他们在营火旁烤了一些鱼。",
+      pinyin: "Tāmen zài yínghuǒ páng kǎo le yìxiē yú.",
+      translation: "彼らは焚火のそばで魚を焼いた。"
+    },
+    memorized: false
+  },
+  {
+    id: 167,
+    chinese: "香",
+    pinyin: "xiāng",
+    partOfSpeech: "形容詞",
+    meaning: "香ばしい / 良い香りがする",
+    example: {
+      sentence: "刚出炉的面包香气扑鼻。",
+      pinyin: "Gāng chūlú de miànbāo xiāngqì pūbí.",
+      translation: "焼きたてのパンは香ばしい香りが漂っている。"
+    },
+    memorized: false
+  },
+  {
+    id: 168,
+    chinese: "饱足感",
+    pinyin: "bǎo zú gǎn",
+    partOfSpeech: "名詞",
+    meaning: "満腹感",
+    example: {
+      sentence: "简单的一餐也能带来满足的饱足感。",
+      pinyin: "Jiǎndān de yì cān yě néng dàilái mǎnzú de bǎozúgǎn.",
+      translation: "簡単な食事でも満足のいく満腹感を得られる。"
+    },
+    memorized: false
+  },
+    {
+    id: 169,
+    chinese: "起床",
+    pinyin: "qǐ chuáng",
+    partOfSpeech: "動詞",
+    meaning: "起きる",
+    example: {
+      sentence: "每天早上五点起床是咒术师的基本习惯。",
+      pinyin: "Měitiān zǎoshang wǔdiǎn qǐchuáng shì zhòushùshī de jīběn xíguàn.",
+      translation: "毎朝5時に起きるのは呪術師の基本的な習慣だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 170,
+    chinese: "睡觉",
+    pinyin: "shuì jiào",
+    partOfSpeech: "動詞",
+    meaning: "寝る",
+    example: {
+      sentence: "战斗结束后，战士们需要好好睡觉恢复体力。",
+      pinyin: "Zhàndòu jiéshù hòu, zhànshìmen xūyào hǎohǎo shuìjiào huīfù tǐlì.",
+      translation: "戦いが終わった後、兵士たちはしっかり寝て体力を回復する必要がある。"
+    },
+    memorized: false
+  },
+  {
+    id: 171,
+    chinese: "洗脸",
+    pinyin: "xǐ liǎn",
+    partOfSpeech: "動詞",
+    meaning: "顔を洗う",
+    example: {
+      sentence: "每次洗脸的时候，他都会回想起战场的灰尘。",
+      pinyin: "Měicì xǐliǎn de shíhou, tā dōu huì huíxiǎngqǐ zhànchǎng de huīchén.",
+      translation: "顔を洗うたびに、彼は戦場の埃を思い出す。"
+    },
+    memorized: false
+  },
+  {
+    id: 172,
+    chinese: "刷牙",
+    pinyin: "shuā yá",
+    partOfSpeech: "動詞",
+    meaning: "歯を磨く",
+    example: {
+      sentence: "即使在忙碌的任务中，也不能忘记刷牙。",
+      pinyin: "Jíshǐ zài mánglù de rènwù zhōng, yě bùnéng wàngjì shuāyá.",
+      translation: "忙しい任務中でも、歯を磨くことを忘れてはいけない。"
+    },
+    memorized: false
+  },
+  {
+    id: 173,
+    chinese: "洗澡",
+    pinyin: "xǐ zǎo",
+    partOfSpeech: "動詞",
+    meaning: "お風呂に入る / シャワーを浴びる",
+    example: {
+      sentence: "战斗结束后，洗澡能帮助放松身心。",
+      pinyin: "Zhàndòu jiéshù hòu, xǐzǎo néng bāngzhù fàngsōng shēnxīn.",
+      translation: "戦いが終わった後、お風呂に入ることで心身をリラックスできる。"
+    },
+    memorized: false
+  },
+  {
+    id: 174,
+    chinese: "吃饭",
+    pinyin: "chī fàn",
+    partOfSpeech: "動詞",
+    meaning: "ご飯を食べる",
+    example: {
+      sentence: "吃饭前先检查食物是否安全。",
+      pinyin: "Chīfàn qián xiān jiǎnchá shíwù shìfǒu ānquán.",
+      translation: "ご飯を食べる前に、食べ物が安全か確認する。"
+    },
+    memorized: false
+  },
+  {
+    id: 175,
+    chinese: "喝水",
+    pinyin: "hē shuǐ",
+    partOfSpeech: "動詞",
+    meaning: "水を飲む",
+    example: {
+      sentence: "长时间的任务中需要定时喝水保持体力。",
+      pinyin: "Cháng shíjiān de rènwù zhōng xūyào dìngshí hēshuǐ bǎochí tǐlì.",
+      translation: "長時間の任務中は、定期的に水を飲んで体力を保つ必要がある。"
+    },
+    memorized: false
+  },
+  {
+    id: 176,
+    chinese: "穿衣服",
+    pinyin: "chuān yī fu",
+    partOfSpeech: "動詞",
+    meaning: "服を着る",
+    example: {
+      sentence: "他穿上战斗服后立刻进入战斗状态。",
+      pinyin: "Tā chuān shàng zhàndòufú hòu lìkè jìnrù zhàndòu zhuàngtài.",
+      translation: "彼は戦闘服を着た途端、すぐに戦闘モードに入った。"
+    },
+    memorized: false
+  },
+  {
+    id: 177,
+    chinese: "脱衣服",
+    pinyin: "tuō yī fu",
+    partOfSpeech: "動詞",
+    meaning: "服を脱ぐ",
+    example: {
+      sentence: "战斗结束后，他脱下满是灰尘的衣服。",
+      pinyin: "Zhàndòu jiéshù hòu, tā tuō xià mǎn shì huīchén de yīfu.",
+      translation: "戦いが終わった後、彼は埃まみれの服を脱いだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 178,
+    chinese: "买东西",
+    pinyin: "mǎi dōng xi",
+    partOfSpeech: "動詞",
+    meaning: "買い物をする",
+    example: {
+      sentence: "他去市场买了一些必要的战斗补给品。",
+      pinyin: "Tā qù shìchǎng mǎi le yìxiē bìyào de zhàndòu bǔjǐpǐn.",
+      translation: "彼は市場に行って、必要な戦闘補給品を買った。"
+    },
+    memorized: false
+  },
+  {
+    id: 179,
+    chinese: "做饭",
+    pinyin: "zuò fàn",
+    partOfSpeech: "動詞",
+    meaning: "料理をする",
+    example: {
+      sentence: "休息时他喜欢自己做饭。",
+      pinyin: "Xiūxi shí tā xǐhuan zìjǐ zuòfàn.",
+      translation: "休憩中、彼は自分で料理をするのが好きだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 180,
+    chinese: "收拾",
+    pinyin: "shōu shi",
+    partOfSpeech: "動詞",
+    meaning: "片付ける",
+    example: {
+      sentence: "任务结束后，他开始收拾营地。",
+      pinyin: "Rènwù jiéshù hòu, tā kāishǐ shōushi yíngdì.",
+      translation: "任務が終わった後、彼はキャンプ地を片付け始めた。"
+    },
+    memorized: false
+  },
+  {
+    id: 181,
+    chinese: "工作",
+    pinyin: "gōng zuò",
+    partOfSpeech: "動詞",
+    meaning: "働く",
+    example: {
+      sentence: "咒术师的工作非常危险。",
+      pinyin: "Zhòushùshī de gōngzuò fēicháng wēixiǎn.",
+      translation: "呪術師の仕事は非常に危険だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 182,
+    chinese: "学习",
+    pinyin: "xué xí",
+    partOfSpeech: "動詞",
+    meaning: "学ぶ / 勉強する",
+    example: {
+      sentence: "学习咒术是为了保护更多的人。",
+      pinyin: "Xuéxí zhòushù shì wèile bǎohù gèngduō de rén.",
+      translation: "呪術を学ぶのは、より多くの人を守るためだ。"
+    },
+    memorized: false
+  },
+    {
+    id: 183,
+    chinese: "家",
+    pinyin: "jiā",
+    partOfSpeech: "名詞",
+    meaning: "家",
+    example: {
+      sentence: "即使在战场上，他依然想念着家。",
+      pinyin: "Jíshǐ zài zhànchǎng shàng, tā yīrán xiǎngniàn zhe jiā.",
+      translation: "戦場にいても、彼は家を恋しがっていた。"
+    },
+    memorized: false
+  },
+  {
+    id: 184,
+    chinese: "学校",
+    pinyin: "xué xiào",
+    partOfSpeech: "名詞",
+    meaning: "学校",
+    example: {
+      sentence: "这是教导咒术师的特殊学校。",
+      pinyin: "Zhè shì jiàodǎo zhòushùshī de tèshū xuéxiào.",
+      translation: "ここは呪術師を育成する特別な学校だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 185,
+    chinese: "医院",
+    pinyin: "yī yuàn",
+    partOfSpeech: "名詞",
+    meaning: "病院",
+    example: {
+      sentence: "受伤的战士被送到了医院进行治疗。",
+      pinyin: "Shòushāng de zhànshì bèi sòng dào le yīyuàn jìnxíng zhìliáo.",
+      translation: "負傷した兵士が治療のため病院に送られた。"
+    },
+    memorized: false
+  },
+  {
+    id: 186,
+    chinese: "餐厅",
+    pinyin: "cān tīng",
+    partOfSpeech: "名詞",
+    meaning: "レストラン / 食堂",
+    example: {
+      sentence: "餐厅是战士们短暂放松的地方。",
+      pinyin: "Cāntīng shì zhànshìmen duǎnzàn fàngsōng de dìfāng.",
+      translation: "食堂は兵士たちが短時間リラックスできる場所だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 187,
+    chinese: "市场",
+    pinyin: "shì chǎng",
+    partOfSpeech: "名詞",
+    meaning: "市場",
+    example: {
+      sentence: "市场里可以找到各种需要的物资。",
+      pinyin: "Shìchǎng lǐ kěyǐ zhǎodào gèzhǒng xūyào de wùzī.",
+      translation: "市場ではさまざまな必要な物資が見つかる。"
+    },
+    memorized: false
+  },
+  {
+    id: 188,
+    chinese: "城墙",
+    pinyin: "chéng qiáng",
+    partOfSpeech: "名詞",
+    meaning: "城壁",
+    example: {
+      sentence: "巨人试图突破城墙，但被守军击退。",
+      pinyin: "Jùrén shìtú tūpò chéngqiáng, dàn bèi shǒujūn jítuì.",
+      translation: "巨人は城壁を突破しようとしたが、守備隊に撃退された。"
+    },
+    memorized: false
+  },
+  {
+    id: 189,
+    chinese: "森林",
+    pinyin: "sēn lín",
+    partOfSpeech: "名詞",
+    meaning: "森",
+    example: {
+      sentence: "森林深处似乎隐藏着危险的咒灵。",
+      pinyin: "Sēnlín shēnchù sìhū yǐncáng zhe wēixiǎn de zhòulíng.",
+      translation: "森の奥には危険な呪霊が潜んでいるようだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 190,
+    chinese: "河",
+    pinyin: "hé",
+    partOfSpeech: "名詞",
+    meaning: "川",
+    example: {
+      sentence: "河边是战士们补充水源的地方。",
+      pinyin: "Hébiān shì zhànshìmen bǔchōng shuǐyuán de dìfāng.",
+      translation: "川辺は兵士たちが水を補給する場所だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 191,
+    chinese: "海",
+    pinyin: "hǎi",
+    partOfSpeech: "名詞",
+    meaning: "海",
+    example: {
+      sentence: "他们站在海边，看着巨浪拍打岸边。",
+      pinyin: "Tāmen zhàn zài hǎibiān, kàn zhe jùlàng pāidǎ ànbiān.",
+      translation: "彼らは海辺に立ち、巨大な波が岸を打つのを見ていた。"
+    },
+    memorized: false
+  },
+  {
+    id: 192,
+    chinese: "山",
+    pinyin: "shān",
+    partOfSpeech: "名詞",
+    meaning: "山",
+    example: {
+      sentence: "山上可能有巨人隐藏的踪迹。",
+      pinyin: "Shān shàng kěnéng yǒu jùrén yǐncáng de zōngjì.",
+      translation: "山の上には巨人が隠れている痕跡があるかもしれない。"
+    },
+    memorized: false
+  },
+  {
+    id: 193,
+    chinese: "营地",
+    pinyin: "yíng dì",
+    partOfSpeech: "名詞",
+    meaning: "キャンプ地",
+    example: {
+      sentence: "他们在城墙外建立了一个临时营地。",
+      pinyin: "Tāmen zài chéngqiáng wài jiànlì le yí gè línshí yíngdì.",
+      translation: "彼らは城壁の外に臨時のキャンプ地を設けた。"
+    },
+    memorized: false
+  },
+  {
+    id: 194,
+    chinese: "城市",
+    pinyin: "chéng shì",
+    partOfSpeech: "名詞",
+    meaning: "都市",
+    example: {
+      sentence: "这座城市因为巨人的袭击而变得一片废墟。",
+      pinyin: "Zhè zuò chéngshì yīnwèi jùrén de xíjī ér biàn de yípiàn fèixū.",
+      translation: "この都市は巨人の襲撃で廃墟と化した。"
+    },
+    memorized: false
+  },
+  {
+    id: 195,
+    chinese: "地牢",
+    pinyin: "dì láo",
+    partOfSpeech: "名詞",
+    meaning: "地下牢",
+    example: {
+      sentence: "地牢中关押着重要的情报人员。",
+      pinyin: "Dìláo zhōng guānyā zhe zhòngyào de qíngbào rényuán.",
+      translation: "地下牢には重要な情報を持つ人が拘束されている。"
+    },
+    memorized: false
+  },
+  {
+    id: 196,
+    chinese: "办公室",
+    pinyin: "bàn gōng shì",
+    partOfSpeech: "名詞",
+    meaning: "オフィス / 事務室",
+    example: {
+      sentence: "指挥官的办公室是讨论战略的地方。",
+      pinyin: "Zhǐhuīguān de bàngōngshì shì tǎolùn zhànlüè de dìfāng.",
+      translation: "指揮官のオフィスは戦略を議論する場所だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 197,
+    chinese: "图书馆",
+    pinyin: "tú shū guǎn",
+    partOfSpeech: "名詞",
+    meaning: "図書館",
+    example: {
+      sentence: "图书馆里藏着关于咒术的古老书籍。",
+      pinyin: "Túshūguǎn lǐ cáng zhe guānyú zhòushù de gǔlǎo shūjí.",
+      translation: "図書館には呪術に関する古い本が保管されている。"
+    },
+    memorized: false
+  },
+    {
+    id: 198,
+    chinese: "红色",
+    pinyin: "hóng sè",
+    partOfSpeech: "名詞",
+    meaning: "赤 / 赤色",
+    example: {
+      sentence: "血的红色染满了战场。",
+      pinyin: "Xiě de hóngsè rǎnmǎn le zhànchǎng.",
+      translation: "血の赤が戦場を染め上げた。"
+    },
+    memorized: false
+  },
+  {
+    id: 199,
+    chinese: "蓝色",
+    pinyin: "lán sè",
+    partOfSpeech: "名詞",
+    meaning: "青 / 青色",
+    example: {
+      sentence: "晴朗的天空是令人安心的蓝色。",
+      pinyin: "Qínglǎng de tiānkōng shì lìng rén ānxīn de lánsè.",
+      translation: "晴れた空は安心させる青だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 200,
+    chinese: "绿色",
+    pinyin: "lǜ sè",
+    partOfSpeech: "名詞",
+    meaning: "緑 / 緑色",
+    example: {
+      sentence: "森林的绿色遮蔽了咒灵的踪迹。",
+      pinyin: "Sēnlín de lǜsè zhēbì le zhòulíng de zōngjì.",
+      translation: "森の緑が呪霊の痕跡を隠した。"
+    },
+    memorized: false
+  },
+  {
+    id: 201,
+    chinese: "黄色",
+    pinyin: "huáng sè",
+    partOfSpeech: "名詞",
+    meaning: "黄 / 黄色",
+    example: {
+      sentence: "黄昏的黄色光芒笼罩了整个城市。",
+      pinyin: "Huánghūn de huángsè guāngmáng lǒngzhào le zhěnggè chéngshì.",
+      translation: "黄昏の黄色い光が街全体を包み込んだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 202,
+    chinese: "白色",
+    pinyin: "bái sè",
+    partOfSpeech: "名詞",
+    meaning: "白 / 白色",
+    example: {
+      sentence: "白色的雪覆盖了城墙。",
+      pinyin: "Báisè de xuě fùgài le chéngqiáng.",
+      translation: "白い雪が城壁を覆った。"
+    },
+    memorized: false
+  },
+  {
+    id: 203,
+    chinese: "黑色",
+    pinyin: "hēi sè",
+    partOfSpeech: "名詞",
+    meaning: "黒 / 黒色",
+    example: {
+      sentence: "黑色的夜晚隐藏着无尽的危险。",
+      pinyin: "Hēisè de yèwǎn yǐncáng zhe wújìn de wēixiǎn.",
+      translation: "黒い夜には尽きることのない危険が潜んでいる。"
+    },
+    memorized: false
+  },
+  {
+    id: 204,
+    chinese: "香味",
+    pinyin: "xiāng wèi",
+    partOfSpeech: "名詞",
+    meaning: "良い香り",
+    example: {
+      sentence: "新鲜出炉的面包散发着香味。",
+      pinyin: "Xīnxiān chūlú de miànbāo sànfā zhe xiāngwèi.",
+      translation: "焼きたてのパンが良い香りを漂わせている。"
+    },
+    memorized: false
+  },
+  {
+    id: 205,
+    chinese: "臭味",
+    pinyin: "chòu wèi",
+    partOfSpeech: "名詞",
+    meaning: "悪臭",
+    example: {
+      sentence: "腐烂的尸体散发着令人作呕的臭味。",
+      pinyin: "Fǔlàn de shītǐ sànfā zhe lìngrén zuò'ǒu de chòuwèi.",
+      translation: "腐敗した死体が吐き気を催すような悪臭を放っている。"
+    },
+    memorized: false
+  },
+  {
+    id: 206,
+    chinese: "甜",
+    pinyin: "tián",
+    partOfSpeech: "形容詞",
+    meaning: "甘い",
+    example: {
+      sentence: "他吃了一口水果，感觉很甜。",
+      pinyin: "Tā chī le yìkǒu shuǐguǒ, gǎnjué hěn tián.",
+      translation: "彼は果物を一口食べて、とても甘いと感じた。"
+    },
+    memorized: false
+  },
+  {
+    id: 207,
+    chinese: "咸",
+    pinyin: "xián",
+    partOfSpeech: "形容詞",
+    meaning: "塩辛い",
+    example: {
+      sentence: "海水的味道是咸的。",
+      pinyin: "Hǎishuǐ de wèidào shì xián de.",
+      translation: "海水の味は塩辛い。"
+    },
+    memorized: false
+  },
+  {
+    id: 208,
+    chinese: "酸",
+    pinyin: "suān",
+    partOfSpeech: "形容詞",
+    meaning: "酸っぱい",
+    example: {
+      sentence: "这个柠檬非常酸。",
+      pinyin: "Zhège níngméng fēicháng suān.",
+      translation: "このレモンはとても酸っぱい。"
+    },
+    memorized: false
+  },
+  {
+    id: 209,
+    chinese: "苦",
+    pinyin: "kǔ",
+    partOfSpeech: "形容詞",
+    meaning: "苦い",
+    example: {
+      sentence: "战士们喝了一口苦涩的药。",
+      pinyin: "Zhànshìmen hē le yìkǒu kǔsè de yào.",
+      translation: "兵士たちは苦い薬を一口飲んだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 210,
+    chinese: "辣",
+    pinyin: "là",
+    partOfSpeech: "形容詞",
+    meaning: "辛い",
+    example: {
+      sentence: "这道菜太辣了，他忍不住喝了几口水。",
+      pinyin: "Zhè dào cài tài là le, tā rěnbùzhù hē le jǐkǒu shuǐ.",
+      translation: "この料理は辛すぎて、彼は思わず水を何口か飲んだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 211,
+    chinese: "浓",
+    pinyin: "nóng",
+    partOfSpeech: "形容詞",
+    meaning: "濃い",
+    example: {
+      sentence: "咖啡的香气浓郁，让人精神一振。",
+      pinyin: "Kāfēi de xiāngqì nóngyù, ràng rén jīngshén yízhèn.",
+      translation: "コーヒーの香りが濃厚で、気分がしゃきっとする。"
+    },
+    memorized: false
+  },
+  {
+    id: 212,
+    chinese: "淡",
+    pinyin: "dàn",
+    partOfSpeech: "形容詞",
+    meaning: "薄い / あっさりしている",
+    example: {
+      sentence: "这道汤的味道有点淡。",
+      pinyin: "Zhè dào tāng de wèidào yǒudiǎn dàn.",
+      translation: "このスープの味は少しあっさりしている。"
+    },
+    memorized: false
+  },
+    {
+    id: 213,
+    chinese: "米饭",
+    pinyin: "mǐ fàn",
+    partOfSpeech: "名詞",
+    meaning: "ご飯 / 白米",
+    example: {
+      sentence: "战士们靠着米饭补充体力。",
+      pinyin: "Zhànshìmen kàozhe mǐfàn bǔchōng tǐlì.",
+      translation: "兵士たちはご飯で体力を補充する。"
+    },
+    memorized: false
+  },
+  {
+    id: 214,
+    chinese: "面条",
+    pinyin: "miàn tiáo",
+    partOfSpeech: "名詞",
+    meaning: "麺類 / ラーメン",
+    example: {
+      sentence: "一碗热乎乎的面条让人倍感满足。",
+      pinyin: "Yì wǎn rèhūhū de miàntiáo ràng rén bèigǎn mǎnzú.",
+      translation: "一杯の熱々の麺が人々を満足させる。"
+    },
+    memorized: false
+  },
+  {
+    id: 215,
+    chinese: "面包",
+    pinyin: "miàn bāo",
+    partOfSpeech: "名詞",
+    meaning: "パン",
+    example: {
+      sentence: "刚出炉的面包散发着香气。",
+      pinyin: "Gāng chūlú de miànbāo sànfā zhe xiāngqì.",
+      translation: "焼きたてのパンが良い香りを漂わせている。"
+    },
+    memorized: false
+  },
+  {
+    id: 216,
+    chinese: "肉",
+    pinyin: "ròu",
+    partOfSpeech: "名詞",
+    meaning: "肉",
+    example: {
+      sentence: "补充体力的最好办法就是吃肉。",
+      pinyin: "Bǔchōng tǐlì de zuì hǎo bànfǎ jiù shì chī ròu.",
+      translation: "体力を補う最良の方法は肉を食べることだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 217,
+    chinese: "鸡肉",
+    pinyin: "jī ròu",
+    partOfSpeech: "名詞",
+    meaning: "鶏肉",
+    example: {
+      sentence: "这道鸡肉料理非常美味。",
+      pinyin: "Zhè dào jīròu liàolǐ fēicháng měiwèi.",
+      translation: "この鶏肉料理はとても美味しい。"
+    },
+    memorized: false
+  },
+  {
+    id: 218,
+    chinese: "鱼",
+    pinyin: "yú",
+    partOfSpeech: "名詞",
+    meaning: "魚",
+    example: {
+      sentence: "他们从河里捕了一些新鲜的鱼。",
+      pinyin: "Tāmen cóng hé lǐ bǔ le yìxiē xīnxiān de yú.",
+      translation: "彼らは川で新鮮な魚を捕まえた。"
+    },
+    memorized: false
+  },
+  {
+    id: 219,
+    chinese: "蔬菜",
+    pinyin: "shū cài",
+    partOfSpeech: "名詞",
+    meaning: "野菜 / 野菜類",
+    example: {
+      sentence: "多吃蔬菜有助于保持健康。",
+      pinyin: "Duō chī shūcài yǒuzhùyú bǎochí jiànkāng.",
+      translation: "野菜をたくさん食べることは健康を維持するのに役立つ。"
+    },
+    memorized: false
+  },
+  {
+    id: 220,
+    chinese: "水果",
+    pinyin: "shuǐ guǒ",
+    partOfSpeech: "名詞",
+    meaning: "果物",
+    example: {
+      sentence: "新鲜的水果是他们唯一的甜食。",
+      pinyin: "Xīnxiān de shuǐguǒ shì tāmen wéiyī de tiánshí.",
+      translation: "新鮮な果物が彼らにとって唯一の甘い食べ物だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 221,
+    chinese: "蛋",
+    pinyin: "dàn",
+    partOfSpeech: "名詞",
+    meaning: "卵",
+    example: {
+      sentence: "早饭时吃一个蛋有助于提供能量。",
+      pinyin: "Zǎofàn shí chī yí gè dàn yǒuzhùyú tígōng néngliàng.",
+      translation: "朝食に卵を1つ食べるとエネルギーを供給できる。"
+    },
+    memorized: false
+  },
+  {
+    id: 222,
+    chinese: "汤",
+    pinyin: "tāng",
+    partOfSpeech: "名詞",
+    meaning: "スープ",
+    example: {
+      sentence: "一碗热汤可以温暖整个身体。",
+      pinyin: "Yì wǎn rètāng kěyǐ wēnnuǎn zhěnggè shēntǐ.",
+      translation: "一杯の熱いスープが体全体を温めてくれる。"
+    },
+    memorized: false
+  },
+  {
+    id: 223,
+    chinese: "牛奶",
+    pinyin: "niú nǎi",
+    partOfSpeech: "名詞",
+    meaning: "牛乳 / ミルク",
+    example: {
+      sentence: "每天喝一杯牛奶对身体有好处。",
+      pinyin: "Měitiān hē yì bēi niúnǎi duì shēntǐ yǒu hǎochù.",
+      translation: "毎日牛乳を一杯飲むことは体に良い。"
+    },
+    memorized: false
+  },
+  {
+    id: 224,
+    chinese: "饺子",
+    pinyin: "jiǎo zi",
+    partOfSpeech: "名詞",
+    meaning: "餃子",
+    example: {
+      sentence: "他们在餐厅点了一份热气腾腾的饺子。",
+      pinyin: "Tāmen zài cāntīng diǎn le yí fèn rèqì téngténg de jiǎozi.",
+      translation: "彼らはレストランで熱々の餃子を注文した。"
+    },
+    memorized: false
+  },
+  {
+    id: 225,
+    chinese: "豆腐",
+    pinyin: "dòu fu",
+    partOfSpeech: "名詞",
+    meaning: "豆腐",
+    example: {
+      sentence: "豆腐富含蛋白质，是健康的食物。",
+      pinyin: "Dòufu fùhán dànbáizhì, shì jiànkāng de shíwù.",
+      translation: "豆腐はタンパク質が豊富で健康的な食べ物だ。"
+    },
+    memorized: false
+  },
+    {
+    id: 226,
+    chinese: "糖果",
+    pinyin: "táng guǒ",
+    partOfSpeech: "名詞",
+    meaning: "キャンディ / 飴",
+    example: {
+      sentence: "小朋友们最喜欢吃糖果。",
+      pinyin: "Xiǎopéngyǒumen zuì xǐhuan chī tángguǒ.",
+      translation: "子どもたちはキャンディが大好きだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 227,
+    chinese: "巧克力",
+    pinyin: "qiǎo kè lì",
+    partOfSpeech: "名詞",
+    meaning: "チョコレート",
+    example: {
+      sentence: "巧克力能让人瞬间感到幸福。",
+      pinyin: "Qiǎokèlì néng ràng rén shùnjiān gǎndào xìngfú.",
+      translation: "チョコレートは一瞬で幸せを感じさせてくれる。"
+    },
+    memorized: false
+  },
+  {
+    id: 228,
+    chinese: "蛋糕",
+    pinyin: "dàn gāo",
+    partOfSpeech: "名詞",
+    meaning: "ケーキ",
+    example: {
+      sentence: "生日时大家一起分享蛋糕。",
+      pinyin: "Shēngrì shí dàjiā yìqǐ fēnxiǎng dàngāo.",
+      translation: "誕生日にはみんなでケーキを分け合う。"
+    },
+    memorized: false
+  },
+  {
+    id: 229,
+    chinese: "饼干",
+    pinyin: "bǐng gān",
+    partOfSpeech: "名詞",
+    meaning: "クッキー / ビスケット",
+    example: {
+      sentence: "他喜欢在喝茶时配上一些饼干。",
+      pinyin: "Tā xǐhuan zài hē chá shí pèi shàng yìxiē bǐnggān.",
+      translation: "彼はお茶を飲むときにクッキーを添えるのが好きだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 230,
+    chinese: "冰淇淋",
+    pinyin: "bīng qí lín",
+    partOfSpeech: "名詞",
+    meaning: "アイスクリーム",
+    example: {
+      sentence: "炎热的夏天来一份冰淇淋最解暑。",
+      pinyin: "Yánrè de xiàtiān lái yí fèn bīngqílín zuì jiěshǔ.",
+      translation: "暑い夏にはアイスクリームが最高だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 231,
+    chinese: "布丁",
+    pinyin: "bù dīng",
+    partOfSpeech: "名詞",
+    meaning: "プリン",
+    example: {
+      sentence: "布丁的口感滑嫩，非常好吃。",
+      pinyin: "Bùdīng de kǒugǎn huánèn, fēicháng hǎochī.",
+      translation: "プリンは滑らかな食感でとても美味しい。"
+    },
+    memorized: false
+  },
+  {
+    id: 232,
+    chinese: "果冻",
+    pinyin: "guǒ dòng",
+    partOfSpeech: "名詞",
+    meaning: "ゼリー",
+    example: {
+      sentence: "孩子们总是喜欢五颜六色的果冻。",
+      pinyin: "Háizimen zǒng shì xǐhuan wǔyán liùsè de guǒdòng.",
+      translation: "子どもたちはカラフルなゼリーが大好きだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 233,
+    chinese: "奶油",
+    pinyin: "nǎi yóu",
+    partOfSpeech: "名詞",
+    meaning: "クリーム",
+    example: {
+      sentence: "这块蛋糕上有厚厚的奶油。",
+      pinyin: "Zhè kuài dàngāo shàng yǒu hòuhòu de nǎiyóu.",
+      translation: "このケーキの上にはたっぷりのクリームが乗っている。"
+    },
+    memorized: false
+  },
+  {
+    id: 234,
+    chinese: "蜜饯",
+    pinyin: "mì jiàn",
+    partOfSpeech: "名詞",
+    meaning: "ドライフルーツ / 砂糖漬け",
+    example: {
+      sentence: "蜜饯是战士们随身携带的能量补充品。",
+      pinyin: "Mìjiàn shì zhànshìmen suíshēn xiédài de néngliàng bǔchōngpǐn.",
+      translation: "砂糖漬けは兵士たちが携帯するエネルギー補給品だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 235,
+    chinese: "棒棒糖",
+    pinyin: "bàng bàng táng",
+    partOfSpeech: "名詞",
+    meaning: "ペロペロキャンディ",
+    example: {
+      sentence: "战斗结束后，他递给孩子一个棒棒糖。",
+      pinyin: "Zhàndòu jiéshù hòu, tā dì gěi háizi yí gè bàngbàngtáng.",
+      translation: "戦いが終わった後、彼は子どもにペロペロキャンディを渡した。"
+    },
+    memorized: false
+  },
+  {
+    id: 236,
+    chinese: "甜点",
+    pinyin: "tián diǎn",
+    partOfSpeech: "名詞",
+    meaning: "デザート",
+    example: {
+      sentence: "晚餐后大家一起享用甜点。",
+      pinyin: "Wǎncān hòu dàjiā yìqǐ xiǎngyòng tiándiǎn.",
+      translation: "夕食後、みんなでデザートを楽しんだ。"
+    },
+    memorized: false
+  },
+  {
+    id: 237,
+    chinese: "果酱",
+    pinyin: "guǒ jiàng",
+    partOfSpeech: "名詞",
+    meaning: "ジャム",
+    example: {
+      sentence: "他在面包上涂了一层草莓果酱。",
+      pinyin: "Tā zài miànbāo shàng tú le yì céng cǎoméi guǒjiàng.",
+      translation: "彼はパンにイチゴジャムを塗った。"
+    },
+    memorized: false
+  },
+  {
+    id: 238,
+    chinese: "蜂蜜",
+    pinyin: "fēng mì",
+    partOfSpeech: "名詞",
+    meaning: "蜂蜜",
+    example: {
+      sentence: "蜂蜜茶是寒冷天气里的最佳选择。",
+      pinyin: "Fēngmì chá shì hánlěng tiānqì lǐ de zuì jiā xuǎnzé.",
+      translation: "蜂蜜茶は寒い天気の日の最高の選択だ。"
+    },
+    memorized: false
+  },
+  {
+    id: 239,
+    chinese: "奶酪",
+    pinyin: "nǎi lào",
+    partOfSpeech: "名詞",
+    meaning: "チーズ",
+    example: {
+      sentence: "新鲜的奶酪是他最喜欢的甜点。",
+      pinyin: "Xīnxiān de nǎilào shì tā zuì xǐhuan de tiándiǎn.",
+      translation: "新鮮なチーズは彼の一番好きなデザートだ。"
+    },
+    memorized: false
+  },
+  
+];
+
+/***********************************************************
+ * 2) ページロード時：暗記状況をローカルストレージから復元 → 一覧表示
+ ***********************************************************/
+window.addEventListener("load", () => {
+  loadMemorizedStatus();
+  displayAllWords();
+});
+
+/***********************************************************
+ * 3) LocalStorageの読み書き
+ ***********************************************************/
+function saveMemorizedStatus() {
+  const memorizedMap = {};
+  words.forEach(w => {
+    memorizedMap[w.id] = w.memorized;
+  });
+  localStorage.setItem("memorizedMap", JSON.stringify(memorizedMap));
+}
+
+function loadMemorizedStatus() {
+  const data = localStorage.getItem("memorizedMap");
+  if (!data) return;
+  const memorizedMap = JSON.parse(data);
+  words.forEach(w => {
+    if (memorizedMap[w.id] !== undefined) {
+      w.memorized = memorizedMap[w.id];
+    }
+  });
+}
+
+/***********************************************************
+ * 4) 単語検索
+ ***********************************************************/
+const searchInput = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchBtn");
+const searchResults = document.getElementById("searchResults");
+
+searchBtn.addEventListener("click", () => {
+  const query = searchInput.value.trim();
+  if (!query) {
+    searchResults.innerHTML = "<p>検索キーワードを入力してください。</p>";
+    return;
+  }
+  const filtered = words.filter(item =>
+    item.chinese.includes(query) || item.pinyin.includes(query)
+  );
+  renderSearchResults(filtered);
+});
+
+function renderSearchResults(list) {
+  if (list.length === 0) {
+    searchResults.innerHTML = "<p>該当する単語が見つかりません。</p>";
+    return;
+  }
+  let html = `
+    <table>
+      <thead>
+        <tr>
+          <th>中国語</th>
+          <th>ピンイン</th>
+          <th>品詞</th>
+          <th>和訳</th>
+          <th>暗記済み?</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+  list.forEach(item => {
+    html += `
+      <tr>
+        <td>${item.chinese}</td>
+        <td>${item.pinyin}</td>
+        <td>${item.partOfSpeech}</td>
+        <td>${item.meaning}</td>
+        <td>
+          <input type="checkbox" class="memorized-checkbox" data-id="${item.id}"
+            ${item.memorized ? "checked" : ""}>
+        </td>
+      </tr>
+    `;
+  });
+  html += "</tbody></table>";
+  searchResults.innerHTML = html;
+
+  // チェックボックス イベント付与
+  const checkboxes = searchResults.querySelectorAll(".memorized-checkbox");
+  checkboxes.forEach(chk => {
+    chk.addEventListener("change", onCheckboxChange);
+  });
+}
+
+/***********************************************************
+ * 5) 全単語一覧 表示
+ ***********************************************************/
+const allWordsList = document.getElementById("allWordsList");
+
+function displayAllWords() {
+  let html = `
+    <table>
+      <thead>
+        <tr>
+          <th>中国語</th>
+          <th>ピンイン</th>
+          <th>品詞</th>
+          <th>和訳</th>
+          <th>暗記済み?</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+  words.forEach(item => {
+    html += `
+      <tr>
+        <td>${item.chinese}</td>
+        <td>${item.pinyin}</td>
+        <td>${item.partOfSpeech}</td>
+        <td>${item.meaning}</td>
+        <td>
+          <input type="checkbox" class="memorized-checkbox" data-id="${item.id}"
+            ${item.memorized ? "checked" : ""}>
+        </td>
+      </tr>
+    `;
+  });
+  html += "</tbody></table>";
+  allWordsList.innerHTML = html;
+
+  const checkboxes = allWordsList.querySelectorAll(".memorized-checkbox");
+  checkboxes.forEach(chk => {
+    chk.addEventListener("change", onCheckboxChange);
+  });
+}
+
+/***********************************************************
+ * チェックボックスの変更イベント
+ ***********************************************************/
+function onCheckboxChange(e) {
+  const checkbox = e.target;
+  const wordId = parseInt(checkbox.dataset.id, 10);
+  const targetWord = words.find(w => w.id === wordId);
+  if (targetWord) {
+    targetWord.memorized = checkbox.checked;
+    saveMemorizedStatus();
+  }
+}
+
+/***********************************************************
+ * 6) フラッシュカード
+ *   - 通常モード：表=中国語, 裏=ピンイン/品詞/和訳
+ *   - 逆モード：表=日本語, 裏=中国語/ピンイン/品詞
+ *   - 例文はカードが裏面になったときのみ表示
+ ***********************************************************/
+let currentIndex = -1;
+let currentWordList = [];
+let isReverseMode = false; // false=通常(中→日)、true=逆モード(日→中)
+
+const flashcard = document.getElementById("flashcard");
+const flashcardFront = document.getElementById("flashcardFront");
+const flashcardBackPinyin = document.getElementById("pinyin");
+const flashcardBackPos = document.getElementById("partOfSpeech");
+const flashcardBackMeaning = document.getElementById("meaning");
+
+const exampleBox = document.getElementById("exampleBox");
+const exampleContent = document.getElementById("exampleContent");
+
+const flipBtn = document.getElementById("flipBtn");
+const nextBtn = document.getElementById("nextBtn");
+const startRandomAllBtn = document.getElementById("startRandomAllBtn");
+const startRandomMemorizedBtn = document.getElementById("startRandomMemorizedBtn");
+const startRandomUnmemorizedBtn = document.getElementById("startRandomUnmemorizedBtn");
+const reverseModeBtn = document.getElementById("reverseModeBtn");
+
+// ==== カードをめくる ====
+flipBtn.addEventListener("click", () => {
+  flashcard.classList.toggle("show-back");
+  // 裏面になったら例文表示、表面に戻したら非表示
+  if (flashcard.classList.contains("show-back")) {
+    exampleBox.style.display = "block";
+  } else {
+    exampleBox.style.display = "none";
+  }
+});
+
+// ==== 次へ ====
+nextBtn.addEventListener("click", () => {
+  showRandomCard();
+});
+
+// ==== ランダム出題ボタン ====
+startRandomAllBtn.addEventListener("click", () => {
+  currentWordList = words;
+  showRandomCard();
+});
+startRandomMemorizedBtn.addEventListener("click", () => {
+  const memorizedOnly = words.filter(w => w.memorized);
+  if (memorizedOnly.length === 0) {
+    alert("暗記済みの単語がありません。");
+    return;
+  }
+  currentWordList = memorizedOnly;
+  showRandomCard();
+});
+startRandomUnmemorizedBtn.addEventListener("click", () => {
+  const unmemorizedOnly = words.filter(w => !w.memorized);
+  if (unmemorizedOnly.length === 0) {
+    alert("未暗記の単語がありません。");
+    return;
+  }
+  currentWordList = unmemorizedOnly;
+  showRandomCard();
+});
+
+// ==== モード切り替えボタン ====
+reverseModeBtn.addEventListener("click", () => {
+  isReverseMode = !isReverseMode;
+  if (isReverseMode) {
+    reverseModeBtn.textContent = "中日モードに切り替え";
+  } else {
+    reverseModeBtn.textContent = "日中モードに切り替え";
+  }
+  // いま出題中の単語も反映し直す
+  if (currentIndex >= 0) {
+    const wordData = words[currentIndex];
+    renderFlashcard(wordData);
+  }
+});
+
+/**
+ * ランダムに1単語ピック
+ */
+function showRandomCard() {
+  if (!currentWordList || currentWordList.length === 0) {
+    alert("出題できる単語がありません。");
+    return;
+  }
+  const randomIndex = Math.floor(Math.random() * currentWordList.length);
+  const wordData = currentWordList[randomIndex];
+  currentIndex = words.findIndex(w => w.id === wordData.id);
+
+  renderFlashcard(wordData);
+}
+
+/**
+ * カードの表示更新
+ */
+function renderFlashcard(wordData) {
+  // まず表面にリセット
+  flashcard.classList.remove("show-back");
+  exampleBox.style.display = "none"; // 例文も隠す
+
+  if (!isReverseMode) {
+    // ===== 通常モード: 表=中国語, 裏=ピンイン/品詞/意味 =====
+    flashcardFront.textContent = wordData.chinese;
+    flashcardBackPinyin.textContent = `ピンイン: ${wordData.pinyin}`;
+    flashcardBackPos.textContent = `品詞: ${wordData.partOfSpeech}`;
+    flashcardBackMeaning.textContent = `意味: ${wordData.meaning}`;
+  } else {
+    // ===== 逆モード: 表=日本語, 裏=中国語/ピンイン/品詞 =====
+    flashcardFront.textContent = wordData.meaning; // 表面に日本語
+    flashcardBackPinyin.textContent = `ピンイン: ${wordData.pinyin}`;
+    flashcardBackPos.textContent = `品詞: ${wordData.partOfSpeech}`;
+    flashcardBackMeaning.textContent = `中国語: ${wordData.chinese}`;
+  }
+
+  // 例文は裏面になったときだけ表示するので、例文の中身だけ更新
+  exampleContent.innerHTML = `
+    <p><strong>${wordData.example.sentence}</strong></p>
+    <p>${wordData.example.pinyin}</p>
+    <p>(${wordData.example.translation})</p>
+  `;
+}
