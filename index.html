@@ -2,23 +2,26 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>フラッシュカード</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="flashcard">
-        <div id="front"></div>
-        <div id="back"></div>
-    </div>
-    <div id="buttons">
-        <button id="prev">前へ</button>
-        <button id="flip">めくる</button>
-        <button id="next">次へ</button>
-    </div>
-    <div>
-        <label for="csvFile">CSVファイルを選択：</label>
-        <input type="file" id="csvFile" accept=".csv">
-        <button id="loadCsv">読み込む</button>
+    <div id="app-container">
+        <div id="flashcard">
+            <div id="front"></div>
+            <div id="back"></div>
+        </div>
+        <div id="buttons">
+            <button id="prev">前へ</button>
+            <button id="flip">めくる</button>
+            <button id="next">次へ</button>
+        </div>
+        <div id="upload-container">
+            <label for="csvFile">CSVファイルを選択：</label>
+            <input type="file" id="csvFile" accept=".csv">
+            <button id="loadCsv">読み込む</button>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
