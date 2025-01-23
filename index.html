@@ -1,77 +1,25 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <title>中国語単語帳（例文別枠＋逆モード対応）</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>フラッシュカード</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>中国語単語帳</h1>
-
-  <!-- ==========================
-       検索機能セクション
-       ========================== -->
-  <section class="search-section">
-    <h2>単語検索</h2>
-    <input type="text" id="searchInput" placeholder="単語を検索 (中国語 / ピンイン)..." />
-    <button id="searchBtn">検索</button>
-    <div class="word-list" id="searchResults"></div>
-  </section>
-
-  <!-- ==========================
-       フラッシュカード セクション
-       ========================== -->
-  <section class="flashcard-section">
-    <h2>フラッシュカード</h2>
-
-    <!-- ランダム出題ボタン群 -->
-    <div class="random-buttons">
-      <button id="startRandomAllBtn">全単語ランダム</button>
-      <button id="startRandomMemorizedBtn">暗記済みランダム</button>
-      <button id="startRandomUnmemorizedBtn">未暗記ランダム</button>
+    <div id="flashcard">
+        <div id="front"></div>
+        <div id="back"></div>
     </div>
-
-    <!-- モード切替ボタン（中国語→日本語／日本語→中国語） -->
-    <div class="mode-switch">
-      <button id="reverseModeBtn">日中モードに切り替え</button>
-      <!-- 上記ボタンを押すと、通常モード⇔逆モードを切り替え -->
+    <div id="buttons">
+        <button id="prev">前へ</button>
+        <button id="flip">めくる</button>
+        <button id="next">次へ</button>
     </div>
-
-    <!-- フラッシュカード本体 -->
-    <div class="flashcard" id="flashcard">
-      <!-- 表面 -->
-      <div class="face front" id="frontFace">
-        <div class="chinese" id="flashcardFront">ここに単語が表示されます</div>
-      </div>
-      <!-- 裏面 -->
-      <div class="face back" id="backFace">
-        <p id="pinyin"></p>
-        <p id="partOfSpeech"></p>
-        <p id="meaning"></p>
-      </div>
-
-      <!-- ボタン類（カード下部に固定） -->
-      <div class="buttons-container">
-        <button id="flipBtn">めくる</button>
-        <button id="nextBtn">次へ</button>
-      </div>
+    <div>
+        <label for="csvFile">CSVファイルを選択：</label>
+        <input type="file" id="csvFile" accept=".csv">
+        <button id="loadCsv">読み込む</button>
     </div>
-
-    <!-- === 例文ボックス (カードの下の別枠) === -->
-    <div class="example-box" id="exampleBox">
-      <h3>例文</h3>
-      <div id="exampleContent">ここに例文が表示されます</div>
-    </div>
-  </section>
-
-  <!-- ==========================
-       全単語一覧
-       ========================== -->
-  <section class="word-list-section">
-    <h2>全単語一覧</h2>
-    <div class="word-list" id="allWordsList"></div>
-  </section>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
